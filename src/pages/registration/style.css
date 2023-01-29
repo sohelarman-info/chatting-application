@@ -1,0 +1,102 @@
+.registration-wrapper {
+  text-align: left;
+}
+.registration-box {
+  align-items: center;
+  height: 100vh;
+}
+
+.grid-left h3 {
+  color: var(--heading-color);
+  font-family: var(--third-font);
+  font-size: 35px;
+  font-weight: var(--bold);
+  text-transform: capitalize;
+  margin-bottom: 13px;
+}
+
+.grid-left p {
+  color: var(--p-color);
+  font-family: var(--third-font);
+  font-size: 21px;
+  font-weight: var(--regular);
+  margin-bottom: 40px;
+}
+
+.reg-field {
+  width: 90%;
+  margin: 18px 0 !important;
+}
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  color: var(--heading-color) !important;
+  font-weight: var(--semibold) !important;
+  font-size: 20px !important;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-eye {
+  position: absolute;
+  top: 40px;
+  left: 82%;
+  cursor: pointer;
+  transition: all linear 0.3s;
+}
+.password-eye:hover path {
+  fill: black;
+}
+.password-eye:hover {
+  transform: scale(120%);
+}
+
+.password-eye svg {
+  width: 25px;
+  height: 25px;
+}
+
+.password-eye path {
+  fill: #d3d3d3;
+  transition: all linear 0.5s;
+}
+
+.registration-button {
+  margin-top: 18px;
+}
+
+.submit-button {
+  width: 90%;
+  border-radius: 86px !important;
+  background-color: var(--theme-color) !important;
+  padding: 15px !important;
+}
+
+.login-link {
+  margin-top: 30px;
+  text-align: center;
+  width: 90%;
+}
+
+.login-link p {
+  font-size: 14px;
+  font-family: var(--secondary-font);
+  font-weight: var(--regular);
+  color: var(--text-color);
+}
+
+.login-link a {
+  color: var(--link-color);
+  font-weight: var(--bold);
+}
+
+.register-img img {
+  width: 100%;
+}
+
+.error-msg {
+  color: var(--error-color) !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  margin-top: -10px !important;
+}
