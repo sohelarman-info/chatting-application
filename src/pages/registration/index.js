@@ -9,11 +9,13 @@ import { useFormik } from "formik";
 import { signUp } from "../../validation/validation";
 import { toast, ToastContainer } from "react-toastify";
 import { BeatLoader } from "react-spinners";
+import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const auth = getAuth();
   const [passShow, setPassShow] = useState("password");
   const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
   const handleShow = () => {
     if (passShow == "password") {
       setPassShow("text");
@@ -52,6 +54,7 @@ const Registration = () => {
             progress: undefined,
             theme: "light",
           });
+          navigate("/login");
         })
         .catch((error) => {
           if (error.code.includes("auth/email-already-in-use")) {
@@ -92,9 +95,9 @@ const Registration = () => {
                       onChange={formik.handleChange}
                       value={formik.values.fullname}
                     />
-                    {formik.errors.fullname && (
+                    {formik.errors.fullname && formik.touched.fullname ? (
                       <p className="error-msg">{formik.errors.fullname}</p>
-                    )}
+                    ) : null}
                   </div>
                   <div className="email-field">
                     <TextField
@@ -106,9 +109,9 @@ const Registration = () => {
                       onChange={formik.handleChange}
                       value={formik.values.email}
                     />
-                    {formik.errors.email && (
+                    {formik.errors.email && formik.touched.email ? (
                       <p className="error-msg">{formik.errors.email}</p>
-                    )}
+                    ) : null}
                   </div>
                   <div className="password-field">
                     <TextField
@@ -120,9 +123,9 @@ const Registration = () => {
                       onChange={formik.handleChange}
                       value={formik.values.password}
                     />
-                    {formik.errors.password && (
+                    {formik.errors.password && formik.touched.password ? (
                       <p className="error-msg">{formik.errors.password}</p>
-                    )}
+                    ) : null}
                     <div className="password-eye" onClick={handleShow}>
                       {passShow == "password" ? (
                         <AiOutlineEye />
@@ -141,11 +144,12 @@ const Registration = () => {
                       onChange={formik.handleChange}
                       value={formik.values.confirmpassword}
                     />
-                    {formik.errors.confirmpassword && (
+                    {formik.errors.confirmpassword &&
+                    formik.touched.confirmpassword ? (
                       <p className="error-msg">
                         {formik.errors.confirmpassword}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                   <div className="registration-button">
                     {loader ? (
@@ -172,7 +176,7 @@ const Registration = () => {
                   </div>
                   <div className="login-link">
                     <p>
-                      Already have an account ? <a href="#">Sign In</a>
+                      Already have an account ? <Link to="/login">Sign In</Link>
                     </p>
                   </div>
                 </form>
