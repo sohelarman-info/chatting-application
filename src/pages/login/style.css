@@ -35,6 +35,29 @@
   border: 5px solid var(--theme-color);
 }
 
+.social-login {
+  margin-top: 50px;
+  width: 90%;
+}
+
+.google-login {
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.google-logtex p {
+  margin: 0 !important;
+  padding: 20px;
+  font-family: var(--secondary-font) !important;
+  font-size: 18px !important;
+  color: var(--heading-color) !important;
+  font-weight: var(--semibold) !important;
+}
+
 .login-field {
   width: 90%;
   margin: 18px 0 !important;

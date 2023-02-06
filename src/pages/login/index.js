@@ -1,18 +1,28 @@
 import { Button, Container, Grid, TextField } from "@mui/material";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
 import { signIn } from "../../validation/validation";
 import "./style.css";
+import { Loginuser } from "../../features/slice/UserSlice";
 
 const Login = () => {
   const auth = getAuth();
   const [passShow, setPassShow] = useState("password");
   const [loader, setLoader] = useState(false);
+  const googleProvider = new GoogleAuthProvider();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleShow = () => {
     if (passShow == "password") {
       setPassShow("text");
@@ -35,7 +45,7 @@ const Login = () => {
         formik.values.email,
         formik.values.password
       )
-        .then(() => {
+        .then(({ user }) => {
           formik.resetForm();
           setLoader(false);
           toast.success("Login Success!", {
@@ -48,6 +58,8 @@ const Login = () => {
             progress: undefined,
             theme: "light",
           });
+          navigate("/");
+          dispatch(Loginuser(user));
         })
         .catch((error) => {
           if (error.code.includes("auth/user-not-found")) {
@@ -78,6 +90,22 @@ const Login = () => {
     },
   });
 
+  const handleGoogleAuth = () => {
+    signInWithPopup(auth, googleProvider).then(
+      toast.success("Login successful with Google", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+    );
+    navigate("/");
+  };
+
   return (
     <div className="login-wrapper">
       <Container fixed>
@@ -91,6 +119,18 @@ const Login = () => {
               </div>
               <div className="login-title">
                 <h3>Login to your account!</h3>
+              </div>
+              <div className="social-login">
+                <div className="google-login" onClick={handleGoogleAuth}>
+                  <div className="google-icon">
+                    <picture>
+                      <img src="./images/icon/google.png" alt="google-login" />
+                    </picture>
+                  </div>
+                  <div className="google-logtex">
+                    <p>Login with Google</p>
+                  </div>
+                </div>
               </div>
               <div>
                 <form onSubmit={formik.handleSubmit}>
