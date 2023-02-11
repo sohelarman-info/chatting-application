@@ -46,20 +46,35 @@ const Login = () => {
         formik.values.password
       )
         .then(({ user }) => {
-          formik.resetForm();
-          setLoader(false);
-          toast.success("Login Success!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          navigate("/");
-          dispatch(Loginuser(user));
+          if (auth.currentUser.emailVerified == true) {
+            formik.resetForm();
+            setLoader(false);
+            toast.success("Login Success!", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            navigate("/");
+            dispatch(Loginuser(user));
+            localStorage.setItem("users", JSON.stringify(user));
+          } else {
+            setLoader(false);
+            toast.error("Your email is not verified!", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
         })
         .catch((error) => {
           if (error.code.includes("auth/user-not-found")) {
@@ -103,7 +118,6 @@ const Login = () => {
         theme: "light",
       })
     );
-    navigate("/");
   };
 
   return (

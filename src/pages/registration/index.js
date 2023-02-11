@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import "./style.css";
@@ -44,6 +48,7 @@ const Registration = () => {
         .then(() => {
           formik.resetForm();
           setLoader(false);
+          sendEmailVerification(auth.currentUser);
           toast.success("🦄 Registration Completed!", {
             position: "top-center",
             autoClose: 5000,
