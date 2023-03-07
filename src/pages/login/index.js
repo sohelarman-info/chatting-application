@@ -106,18 +106,11 @@ const Login = () => {
   });
 
   const handleGoogleAuth = () => {
-    signInWithPopup(auth, googleProvider).then(
-      toast.success("Login successful with Google", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-    );
+    signInWithPopup(auth, googleProvider).then(({ user }) => {
+      dispatch(Loginuser(user));
+      localStorage.setItem("users", JSON.stringify(user));
+      navigate("/");
+    });
   };
 
   return (
@@ -205,6 +198,9 @@ const Login = () => {
                       </Button>
                     )}
                     <ToastContainer />
+                  </div>
+                  <div className="forgot-link">
+                    <Link to="/forgetpassword">Forgot your password?</Link>
                   </div>
                   <div className="signup-link">
                     <p>

@@ -125,6 +125,19 @@
   font-weight: var(--bold);
 }
 
+.forgot-link {
+  width: 90%;
+  margin-top: 20px;
+  text-align: center !important;
+}
+
+.forgot-link a {
+  font-size: 14px !important;
+  font-family: var(--secondary-font) !important;
+  font-weight: var(--regular) !important;
+  color: var(--link-color) !important;
+}
+
 .signin-img img {
   width: 100%;
 }

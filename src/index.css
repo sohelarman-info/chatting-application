@@ -5,6 +5,10 @@
   outline: 0;
 }
 
+body {
+  behavior: smoth;
+}
+
 a {
   text-decoration: none;
   color: var(--link-color);
@@ -24,6 +28,7 @@ ol {
   /* color  */
   --theme-color: #5f35f5;
   --theme-text-color: #ffffff;
+  --white: #ffffff;
   --heading-color: #11175d;
   --text-color: #03014c;
   --p-color: #64699d;

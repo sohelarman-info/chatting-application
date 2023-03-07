@@ -149,6 +149,7 @@ const Registration = () => {
                       onChange={formik.handleChange}
                       value={formik.values.confirmpassword}
                     />
+
                     {formik.errors.confirmpassword &&
                     formik.touched.confirmpassword ? (
                       <p className="error-msg">
