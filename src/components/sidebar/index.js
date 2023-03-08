@@ -3,15 +3,22 @@ import SidebarIcons from "./sidebaricons";
 
 import { ImExit } from "react-icons/im";
 import "./style.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "../../features/slice/UserSlice";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import ProfileModal from "../modal/profilemodal";
 
 const Sidebar = () => {
   const auth = getAuth();
+  const users = useSelector((user) => user.loginSlice.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const handlelogout = () => {
     signOut(auth)
       .then(() => {
@@ -29,10 +36,16 @@ const Sidebar = () => {
       <div className="sidebar">
         <div className="sidebar-column">
           <div className="profile-section">
-            <div className="profile-pic">
+            <div className="profile-pic" onClick={handleOpen}>
               <picture>
                 <img src="./images/profile/avatar.jpg" alt="profile-pic" />
               </picture>
+              <div className="profile-upload">
+                <AiOutlineCloudUpload />
+              </div>
+            </div>
+            <div className="username">
+              <h4>{users.displayName}</h4>
             </div>
           </div>
           <div className="page-section">
@@ -45,6 +58,8 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
+
+      <ProfileModal open={open} setOpen={setOpen} />
     </div>
   );
 };

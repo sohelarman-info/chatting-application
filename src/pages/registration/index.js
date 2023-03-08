@@ -3,7 +3,9 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
+import { getDatabase, push, ref, set } from "firebase/database";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import "./style.css";
@@ -17,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const [passShow, setPassShow] = useState("password");
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
@@ -45,21 +48,33 @@ const Registration = () => {
         formik.values.email,
         formik.values.password
       )
-        .then(() => {
-          formik.resetForm();
-          setLoader(false);
-          sendEmailVerification(auth.currentUser);
-          toast.success("🦄 Registration Completed!", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+        .then(({ user }) => {
+          updateProfile(auth.currentUser, {
+            displayName: formik.values.fullname,
+          }).then(() => {
+            formik.resetForm();
+            setLoader(false);
+            sendEmailVerification(auth.currentUser).then(() => {
+              set(ref(db, "users/" + user.uid), {
+                username: user.displayName,
+                email: user.email,
+              }).then(() => {
+                toast.success(
+                  " Registration Completed! Please verify your Email",
+                  {
+                    position: "top-center",
+                    autoClose: false,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  }
+                );
+              });
+            });
           });
-          navigate("/login");
         })
         .catch((error) => {
           if (error.code.includes("auth/email-already-in-use")) {
