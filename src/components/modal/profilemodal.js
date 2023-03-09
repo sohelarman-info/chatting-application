@@ -25,7 +25,7 @@ const ProfileModal = ({ open, setOpen }) => {
       >
         <Fade in={open}>
           <Box className="profile-pic-modal-style">
-            <ProfilePicUpload />
+            <ProfilePicUpload setOpen={setOpen} />
           </Box>
         </Fade>
       </Modal>

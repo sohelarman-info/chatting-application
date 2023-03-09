@@ -38,7 +38,14 @@ const Sidebar = () => {
           <div className="profile-section">
             <div className="profile-pic" onClick={handleOpen}>
               <picture>
-                <img src="./images/profile/avatar.jpg" alt="profile-pic" />
+                {users.photoURL == null ? (
+                  <img
+                    src="./images/profile/avatar.jpg"
+                    alt={users.displayName}
+                  />
+                ) : (
+                  <img src={users.photoURL} alt={users.displayName} />
+                )}
               </picture>
               <div className="profile-upload">
                 <AiOutlineCloudUpload />
@@ -46,6 +53,7 @@ const Sidebar = () => {
             </div>
             <div className="username">
               <h4>{users.displayName}</h4>
+              {console.log(users)}
             </div>
           </div>
           <div className="page-section">
