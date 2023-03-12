@@ -8,6 +8,26 @@
 body {
   behavior: smoth;
   font-family: var(--primary-font);
+  background-color: #f8fafb;
+  overflow: auto;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(211, 210, 210);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--theme-color);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--heading-color);
 }
 
 a {
@@ -30,6 +50,7 @@ ol {
   --theme-color: #5f35f5;
   --theme-text-color: #ffffff;
   --white: #ffffff;
+  --black: #000000;
   --heading-color: #11175d;
   --text-color: #03014c;
   --p-color: #64699d;

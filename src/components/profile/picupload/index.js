@@ -74,7 +74,7 @@ const ProfilePicUpload = ({ setOpen }) => {
             <IoIosImages />
           </div>
           <div className="upload-text">
-            <p>Upload Your Profile Picture</p>
+            <p>Choose Your Profile Picture</p>
           </div>
         </div>
 

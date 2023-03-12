@@ -53,7 +53,6 @@ const Sidebar = () => {
             </div>
             <div className="username">
               <h4>{users.displayName}</h4>
-              {console.log(users)}
             </div>
           </div>
           <div className="page-section">
