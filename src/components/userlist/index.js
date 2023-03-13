@@ -1,11 +1,26 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { IoMdAdd } from "react-icons/io";
 import { SlOptionsVertical } from "react-icons/sl";
 import { UserData } from "./data";
 import "./style.css";
 
 const UserList = () => {
+  const db = getDatabase();
+  const [userlists, setUserlists] = useState([]);
+
+  useEffect(() => {
+    const starCountRef = ref(db, "users/");
+
+    onValue(starCountRef, (snapshot) => {
+      const userArray = [];
+      snapshot.forEach((user) => {
+        userArray.push(user.val());
+      });
+      setUserlists(userArray);
+    });
+  }, []);
   return (
     <div className="users-list-wrapper">
       <div className="friends-list-header">
@@ -15,16 +30,16 @@ const UserList = () => {
         </div>
       </div>
       <div className="users-wrapper-scroll">
-        {UserData.map((item, i) => (
-          <div className="users-item-wraper">
+        {userlists.map((item, i) => (
+          <div key={i} className="users-item-wraper">
             <div className="users-item-pic">
               <picture>
-                <img src={item.images} alt="friends friends" />
+                <img src="./images/friends/1.jpg" alt="friends friends" />
               </picture>
             </div>
             <div className="users-item-name">
-              <h5>{item.name}</h5>
-              <p>{item.time}</p>
+              <h5>{item.username}</h5>
+              <p>Today, 3.45pm</p>
             </div>
             <div className="users-item-button">
               <div className="users-block-button">
