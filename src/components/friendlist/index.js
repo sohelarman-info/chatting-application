@@ -12,7 +12,7 @@ const FriendList = () => {
           <SlOptionsVertical />
         </div>
       </div>
-      <div className="friends-wrapper-scroll">
+      <div className="friends-list-wrapper-scroll">
         <div className="friends-item-wraper">
           <div className="friends-item-pic">
             <picture>
@@ -24,7 +24,7 @@ const FriendList = () => {
             <p>Dinner?</p>
           </div>
           <div className="friends-item-button">
-            <div className="block-button">
+            <div className="friends-block-button">
               <Button variant="contained">Block</Button>
             </div>
           </div>
@@ -40,7 +40,7 @@ const FriendList = () => {
             <p>su re!</p>
           </div>
           <div className="friends-item-button">
-            <div className="block-button">
+            <div className="friends-block-button">
               <Button variant="contained">Block</Button>
             </div>
           </div>
@@ -56,7 +56,7 @@ const FriendList = () => {
             <p>Hi...</p>
           </div>
           <div className="friends-item-button">
-            <div className="block-button">
+            <div className="friends-block-button">
               <Button variant="contained">Block</Button>
             </div>
           </div>
@@ -72,7 +72,7 @@ const FriendList = () => {
             <p>I will call him today.</p>
           </div>
           <div className="friends-item-button">
-            <div className="block-button">
+            <div className="friends-block-button">
               <Button variant="contained">Block</Button>
             </div>
           </div>
@@ -88,7 +88,7 @@ const FriendList = () => {
             <p>Go on</p>
           </div>
           <div className="friends-item-button">
-            <div className="block-button">
+            <div className="friends-block-button">
               <Button variant="contained">Block</Button>
             </div>
           </div>
