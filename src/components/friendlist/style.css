@@ -16,21 +16,21 @@
   padding-right: 10px;
 }
 
-.friends-wrapper-scroll::-webkit-scrollbar {
+.friends-list-wrapper-scroll::-webkit-scrollbar {
   width: 8px;
 }
 
-.friends-wrapper-scroll::-webkit-scrollbar-track {
+.friends-list-wrapper-scroll::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgb(211, 210, 210);
   border-radius: 10px;
 }
 
-.friends-wrapper-scroll::-webkit-scrollbar-thumb {
+.friends-list-wrapper-scroll::-webkit-scrollbar-thumb {
   background: #5f35f5;
   border-radius: 10px;
 }
 
-.friends-wrapper-scroll::-webkit-scrollbar-thumb:hover {
+.friends-list-wrapper-scroll::-webkit-scrollbar-thumb:hover {
   background: #33169c;
 }
 

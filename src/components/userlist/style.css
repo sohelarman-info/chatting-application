@@ -113,6 +113,7 @@
   font-weight: var(--bold);
   font-size: 14px;
   padding: 10px;
+  padding-right: 10px !important;
 }
 
 .users-block-button button svg {
@@ -120,6 +121,7 @@
   stroke: #fff;
   width: 20px;
   height: 20px;
+  margin-right: 10px;
 }
 
 .users-block-button button:hover {
