@@ -65,7 +65,7 @@ const FriendRequest = () => {
             </div>
             <div className="friends-item-name">
               <h5>{item.sendername}</h5>
-              <p>Dinner?</p>
+              <p>{item.id}</p>
             </div>
             <div className="friends-item-button">
               <div className="accept-button">

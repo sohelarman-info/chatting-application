@@ -8,17 +8,18 @@ import {
   push,
   remove,
 } from "firebase/database";
-import { IoMdAdd } from "react-icons/io";
-import { SlOptionsVertical } from "react-icons/sl";
+import { FaUserPlus, FaUserTimes } from "react-icons/fa";
 import "./style.css";
 import { useSelector } from "react-redux";
 import { BsCheck2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
+import { SlOptionsVertical } from "react-icons/sl";
 
 const UserList = () => {
   const db = getDatabase();
   const [userlists, setUserlists] = useState([]);
   const [friendRequest, setFriendRequest] = useState([]);
+  const [cancelRequest, setCancelRequest] = useState([]);
   const [friends, setFriends] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
 
@@ -54,6 +55,7 @@ const UserList = () => {
       let requestArray = [];
       snapshot.forEach((item) => {
         requestArray.push(item.val().receiverid + item.val().senderid);
+        requestArray.push({ ...item, id: item.key });
       });
       setFriendRequest(requestArray);
     });
@@ -67,11 +69,29 @@ const UserList = () => {
       let friendsArray = [];
       snapshot.forEach((item) => {
         friendsArray.push(item.val().receiverid + item.val().senderid);
-        console.log(item.val().receiverid);
       });
       setFriends(friendsArray);
     });
   }, []);
+
+  // friend request cancel
+
+  useEffect(() => {
+    const starCountRef = ref(db, "friendrequest/");
+
+    onValue(starCountRef, (snapshot) => {
+      let cancelRequestArray = [];
+      snapshot.forEach((item) => {
+        cancelRequestArray.push(item.val().receiverid + item.val().senderid);
+        cancelRequestArray.push({ ...item, id: item.key });
+      });
+      setCancelRequest(cancelRequestArray);
+    });
+  }, []);
+
+  const handleCancelRequest = (item) => {
+    remove(ref(db, "friendrequest/" + cancelRequest[1].id));
+  };
 
   return (
     <div className="users-list-wrapper">
@@ -91,12 +111,17 @@ const UserList = () => {
             </div>
             <div className="users-item-name">
               <h5>{item.username}</h5>
-              <p>Today, 3.45pm</p>
+              <p>{item.id}</p>
             </div>
             <div className="users-item-button">
               <div className="users-block-button">
                 {friendRequest.includes(item.id + user.uid) ? (
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    onClick={() =>
+                      handleCancelRequest(friendRequest.includes(item))
+                    }
+                  >
                     <RxCross2 />
                     Cancel
                   </Button>
@@ -107,14 +132,14 @@ const UserList = () => {
                 ) : friends.includes(item.id + user.uid) ||
                   friends.includes(user.uid + item.id) ? (
                   <Button variant="contained">
-                    <IoMdAdd /> Unfriends
+                    <FaUserTimes /> Unfriend
                   </Button>
                 ) : (
                   <Button
                     variant="contained"
                     onClick={() => handleRequestSend(item)}
                   >
-                    <IoMdAdd /> Add Friend
+                    <FaUserPlus /> Add Friend
                   </Button>
                 )}
               </div>
