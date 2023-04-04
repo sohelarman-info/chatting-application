@@ -14,6 +14,7 @@ import "./style.css";
 
 const FriendList = () => {
   const [friendList, setFriendList] = useState([]);
+  const [disabled, setDisabled] = useState(false);
   const user = useSelector((users) => users.loginSlice.login);
   const db = getDatabase();
   // read friends
@@ -37,14 +38,21 @@ const FriendList = () => {
   // friend block
 
   const handleBlock = (item) => {
+    setDisabled(true);
     if (user.uid == item.senderid) {
       set(push(ref(db, "block/")), {
         block: item.receivername,
         blockid: item.receiverid,
         blockby: item.sendername,
         blockbyid: item.senderid,
+        receiverid: item.receiverid,
+        receivername: item.receivername,
+        requestKey: item.requestKey,
+        senderid: item.senderid,
+        sendername: item.sendername,
       }).then(() => {
         remove(ref(db, "friends/" + item.id));
+        setDisabled(false);
       });
     } else if (user.uid == item.receiverid) {
       set(push(ref(db, "block/")), {
@@ -52,8 +60,14 @@ const FriendList = () => {
         blockid: item.senderid,
         blockby: item.receivername,
         blockbyid: item.receiverid,
+        receiverid: item.receiverid,
+        receivername: item.receivername,
+        requestKey: item.requestKey,
+        senderid: item.senderid,
+        sendername: item.sendername,
       }).then(() => {
         remove(ref(db, "friends/" + item.id));
+        setDisabled(false);
       });
     }
   };
@@ -84,9 +98,15 @@ const FriendList = () => {
             </div>
             <div className="friends-item-button">
               <div className="friends-block-button">
-                <Button variant="contained" onClick={() => handleBlock(item)}>
-                  Block
-                </Button>
+                {disabled ? (
+                  <Button variant="contained" disabled>
+                    Block
+                  </Button>
+                ) : (
+                  <Button variant="contained" onClick={() => handleBlock(item)}>
+                    Block
+                  </Button>
+                )}
               </div>
             </div>
           </div>

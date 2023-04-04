@@ -14,13 +14,21 @@ import { useSelector } from "react-redux";
 import { BsCheck2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { SlOptionsVertical } from "react-icons/sl";
+import { CgUnblock } from "react-icons/cg";
+import { BiBlock } from "react-icons/bi";
 
 const UserList = () => {
   const db = getDatabase();
   const [userlists, setUserlists] = useState([]);
   const [friendRequest, setFriendRequest] = useState([]);
   const [cancelRequest, setCancelRequest] = useState([]);
+  const [acceptRequest, setAcceptRequest] = useState([]);
+  const [unfriendRequest, setUnfriendRequest] = useState([]);
+  const [unblock, setUnblock] = useState([]);
+  const [unblockDisabled, setUnblockDisabled] = useState(false);
+
   const [friends, setFriends] = useState([]);
+  const [blockFriends, setBlockFriends] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
 
   useEffect(() => {
@@ -74,23 +82,133 @@ const UserList = () => {
     });
   }, []);
 
-  // friend request cancel
+  // read block friends list
+  useEffect(() => {
+    const starCountRef = ref(db, "block/");
+
+    onValue(starCountRef, (snapshot) => {
+      let blockArray = [];
+      snapshot.forEach((item) => {
+        blockArray.push(item.val().blockbyid + item.val().blockid);
+      });
+      setBlockFriends(blockArray);
+    });
+  }, []);
+
+  // cancel friend request
+  useEffect(() => {
+    const starCountRef = ref(db, "friendrequest/");
+
+    onValue(starCountRef, (snapshot) => {
+      let requestArray = [];
+      let cancelKey = [];
+      snapshot.forEach((item) => {
+        requestArray.push(item.val().receiverid + item.val().senderid);
+        cancelKey.push({ ...item.val(), requestKey: item.key });
+      });
+      setCancelRequest(cancelKey);
+    });
+  }, []);
+
+  const handleCancelRequest = (userInfo) => {
+    cancelRequest.map((item) => {
+      if (userInfo.id === item.receiverid) {
+        remove(ref(db, "friendrequest/" + item.requestKey));
+      } else {
+        console.log("something problem");
+      }
+    });
+  };
+
+  // accept friend request
 
   useEffect(() => {
     const starCountRef = ref(db, "friendrequest/");
 
     onValue(starCountRef, (snapshot) => {
-      let cancelRequestArray = [];
+      let requestArray = [];
+      let acceptArray = [];
       snapshot.forEach((item) => {
-        cancelRequestArray.push(item.val().receiverid + item.val().senderid);
-        cancelRequestArray.push({ ...item, id: item.key });
+        requestArray.push(item.val().receiverid + item.val().senderid);
+        acceptArray.push({ ...item.val(), requestKey: item.key });
       });
-      setCancelRequest(cancelRequestArray);
+      setAcceptRequest(acceptArray);
     });
   }, []);
 
-  const handleCancelRequest = (item) => {
-    remove(ref(db, "friendrequest/" + cancelRequest[1].id));
+  const handleAccept = (userInfo) => {
+    acceptRequest.map((item) => {
+      if (userInfo.id === item.senderid) {
+        set(push(ref(db, "friends/")), {
+          ...item,
+        }).then(() => {
+          remove(ref(db, "friendrequest/" + item.requestKey));
+        });
+      } else {
+        console.log("something problem");
+      }
+    });
+  };
+
+  // unfriend request
+  useEffect(() => {
+    const starCountRef = ref(db, "friends/");
+
+    onValue(starCountRef, (snapshot) => {
+      let friendsArray = [];
+      let unfriendKey = [];
+      snapshot.forEach((item) => {
+        friendsArray.push(item.val().receiverid + item.val().senderid);
+        unfriendKey.push({ ...item.val(), friendsKey: item.key });
+      });
+      setUnfriendRequest(unfriendKey);
+    });
+  }, []);
+
+  const handleUnfriend = (userInfo) => {
+    unfriendRequest.map((item) => {
+      if (userInfo.id === item.senderid) {
+        remove(ref(db, "friends/" + item.friendsKey));
+      } else if (userInfo.id === item.receiverid) {
+        remove(ref(db, "friends/" + item.friendsKey));
+      } else {
+        console.log("something problem");
+      }
+    });
+  };
+
+  // unblock friend
+  useEffect(() => {
+    const starCountRef = ref(db, "block/");
+    onValue(starCountRef, (snapshot) => {
+      let blockArray = [];
+      let unblockedKey = [];
+      snapshot.forEach((item) => {
+        blockArray.push(item.val().blockbyid + item.val().blockid);
+        unblockedKey.push({ ...item.val(), blockKey: item.key });
+      });
+      setUnblock(unblockedKey);
+    });
+  }, []);
+
+  const handleUnblock = (userInfo) => {
+    setUnblockDisabled(true);
+    unblock.map((item) => {
+      if (userInfo.id === item.blockid) {
+        set(push(ref(db, "friends")), {
+          receiverid: item.receiverid,
+          receivername: item.receivername,
+          requestKey: item.requestKey,
+          senderid: item.senderid,
+          sendername: item.sendername,
+        }).then(() => {
+          remove(ref(db, "block/" + item.blockKey));
+          setUnblockDisabled(false);
+        });
+      } else {
+        console.log("something problem");
+      }
+    });
   };
 
   return (
@@ -118,21 +236,37 @@ const UserList = () => {
                 {friendRequest.includes(item.id + user.uid) ? (
                   <Button
                     variant="contained"
-                    onClick={() =>
-                      handleCancelRequest(friendRequest.includes(item))
-                    }
+                    onClick={() => handleCancelRequest(item)}
                   >
                     <RxCross2 />
                     Cancel
                   </Button>
                 ) : friendRequest.includes(user.uid + item.id) ? (
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    onClick={() => handleAccept(item)}
+                  >
                     <BsCheck2 /> Accept
                   </Button>
                 ) : friends.includes(item.id + user.uid) ||
                   friends.includes(user.uid + item.id) ? (
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    onClick={() => handleUnfriend(item)}
+                  >
                     <FaUserTimes /> Unfriend
+                  </Button>
+                ) : blockFriends.includes(item.id + user.uid) ? (
+                  <Button variant="contained" disabled>
+                    <BiBlock /> Blocked
+                  </Button>
+                ) : blockFriends.includes(user.uid + item.id) ? (
+                  <Button
+                    className="block-button"
+                    variant="contained"
+                    onClick={() => handleUnblock(item)}
+                  >
+                    <CgUnblock /> Unblocked
                   </Button>
                 ) : (
                   <Button

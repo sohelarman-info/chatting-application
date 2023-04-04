@@ -36,12 +36,20 @@
 .group-list-header {
   padding: 1px 0;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 .group-list-header h4 {
   font-size: 20px;
   font-weight: var(--bold);
   color: var(--black);
   text-transform: capitalize;
+}
+
+.create-group {
+  margin-right: 30px;
 }
 
 .group-list-option {
@@ -116,4 +124,21 @@
 .group-item-button button:hover {
   background-color: var(--theme-color);
   color: var(--theme-text-color);
+}
+
+.field {
+  margin-top: 20px !important;
+  width: 100% !important;
+}
+
+.group-submit-btn {
+  width: 100%;
+  background-color: var(--theme-color) !important;
+  color: var(--theme-text-color) !important;
+  margin-top: 20px !important;
+}
+
+.group-submit-btn:hover {
+  background-color: var(--theme-color) !important;
+  color: var(--theme-text-color) !important;
 }

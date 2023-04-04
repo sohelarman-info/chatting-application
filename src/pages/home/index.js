@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import React from "react";
 import BlockList from "../../components/blocklist";
+import CancelFriendRequest from "../../components/cancelrequest";
 import FriendList from "../../components/friendlist";
 import FriendRequest from "../../components/friendrequest";
 import GroupList from "../../components/grouplist";
@@ -14,21 +15,30 @@ const Home = () => {
     <div className="homepage">
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <SearchBox />
-          <GroupList />
-          <FriendRequest />
+          <div>
+            <SearchBox />
+          </div>
+          <div>
+            <GroupList />
+          </div>
+          <div>
+            <UserList />
+          </div>
+          <div>
+            <CancelFriendRequest />
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div>
+            <MyGroups />
+          </div>
+          <div>
+            <FriendRequest />
+          </div>
         </Grid>
         <Grid item xs={4}>
           <div>
             <FriendList />
-          </div>
-          <div>
-            <MyGroups />
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div>
-            <UserList />
           </div>
           <div>
             <BlockList />

@@ -1,5 +1,5 @@
-.users-list-wrapper {
-  margin-top: 15px;
+.friends-request-wrapper {
+  margin-top: 20px;
   width: 100%;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -8,44 +8,44 @@
   margin-bottom: 20px;
 }
 
-.users-wrapper-scroll {
+.friends-wrapper-scroll {
   width: 100%;
-  height: 410px;
+  height: 430px;
   margin-top: 20px;
   overflow: auto;
   padding-right: 10px;
 }
 
-.users-wrapper-scroll::-webkit-scrollbar {
+.friends-wrapper-scroll::-webkit-scrollbar {
   width: 8px;
 }
 
-.users-wrapper-scroll::-webkit-scrollbar-track {
+.friends-wrapper-scroll::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgb(211, 210, 210);
   border-radius: 10px;
 }
 
-.users-wrapper-scroll::-webkit-scrollbar-thumb {
+.friends-wrapper-scroll::-webkit-scrollbar-thumb {
   background: #5f35f5;
   border-radius: 10px;
 }
 
-.users-wrapper-scroll::-webkit-scrollbar-thumb:hover {
+.friends-wrapper-scroll::-webkit-scrollbar-thumb:hover {
   background: #33169c;
 }
 
-.users-list-header {
+.friends-list-header {
   padding: 1px 0;
   position: relative;
 }
-.users-list-header h4 {
+.friends-list-header h4 {
   font-size: 20px;
   text-transform: capitalize;
   font-weight: var(--bold);
   color: var(--black);
 }
 
-.users-list-option {
+.friends-list-option {
   width: 20px;
   height: 20px;
   position: absolute;
@@ -53,12 +53,12 @@
   top: 6px;
 }
 
-.users-list-option svg {
+.friends-list-option svg {
   fill: var(--theme-color);
   cursor: pointer;
 }
 
-.users-item-wraper {
+.friends-item-wraper {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,68 +67,67 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 }
 
-.users-item-wraper:last-child {
+.friends-item-wraper:last-child {
   border-bottom: none;
 }
 
-.users-item-pic {
+.friends-item-pic {
   width: 70px;
   height: 70px;
 }
 
-.users-item-pic img {
+.friends-item-pic img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.users-item-name {
+.friends-item-name {
   width: 50%;
   margin-left: 20px;
 }
 
-.users-item-name h5 {
+.friends-item-name h5 {
   text-transform: capitalize;
   font-size: 18px;
   font-weight: var(--bold);
   color: var(--black);
 }
 
-.users-item-name p {
+.friends-item-name p {
   font-size: 18px;
   color: rgba(77, 77, 77, 0.75);
   font-size: 14px;
   font-weight: var(--regular);
 }
 
-.users-item-button {
+.friends-item-button {
   padding: 10px;
 }
 
-.users-block-button button {
-  min-width: 30px;
-  background-color: var(--theme-color);
-  color: var(--white);
+.cancel-button {
+  margin-top: 5px;
+}
+
+.cancel-button button {
+  width: 100%;
+  background-color: #e91e63 !important;
+  color: var(--theme-text-color);
   font-weight: var(--bold);
   font-size: 14px;
-  padding: 10px;
-  padding-right: 10px !important;
+  width: 10px;
+  height: 45px;
 }
 
-.users-block-button button svg {
+.cancel-button button svg {
   fill: #fff;
   stroke: #fff;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  width: 25px;
+  height: 25px;
 }
 
-.users-block-button button:hover {
-  background-color: var(--theme-color);
+.cancel-button button:hover {
+  background-color: #e91e63;
   color: var(--theme-text-color);
-}
-
-.block-button {
-  background-color: red !important;
 }

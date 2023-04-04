@@ -1,9 +1,7 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SlOptionsVertical } from "react-icons/sl";
-import { RxCross2 } from "react-icons/rx";
 import "./style.css";
-import { BsCheck2 } from "react-icons/bs";
 import {
   getDatabase,
   onValue,
@@ -13,8 +11,9 @@ import {
   set,
 } from "firebase/database";
 import { useSelector } from "react-redux";
+import { RxCross2 } from "react-icons/rx";
 
-const FriendRequest = () => {
+const CancelFriendRequest = () => {
   const db = getDatabase();
   const [friendRequest, setFriendRequest] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
@@ -25,32 +24,23 @@ const FriendRequest = () => {
     onValue(starCountRef, (snapshot) => {
       let requestArray = [];
       snapshot.forEach((item) => {
-        if (item.val().receiverid == user.uid) {
-          requestArray.push({ ...item.val(), requestKey: item.key });
+        if (item.val().senderid == user.uid) {
+          requestArray.push({ ...item.val(), id: item.key });
         }
       });
       setFriendRequest(requestArray);
     });
   }, []);
 
-  // friend request accept
-  const handleAccept = (item) => {
-    set(push(ref(db, "friends/")), {
-      ...item,
-    }).then(() => {
-      remove(ref(db, "friendrequest/" + item.requestKey));
-    });
-  };
-
   // friend request cancel
   const handleCancel = (item) => {
-    remove(ref(db, "friendrequest/" + item.requestKey));
+    remove(ref(db, "friendrequest/" + item.id));
   };
 
   return (
     <div className="friends-request-wrapper">
       <div className="friends-list-header">
-        <h4>Friends Request</h4>
+        <h4>You Sent Request</h4>
         <div className="friends-list-option">
           <SlOptionsVertical />
         </div>
@@ -64,16 +54,11 @@ const FriendRequest = () => {
               </picture>
             </div>
             <div className="friends-item-name">
-              <h5>{item.sendername}</h5>
+              <h5>{item.receivername}</h5>
               <p>{item.id}</p>
             </div>
             <div className="friends-item-button">
-              <div className="accept-button">
-                <Button variant="contained" onClick={() => handleAccept(item)}>
-                  <BsCheck2 />
-                </Button>
-              </div>
-              <div className="reject-button">
+              <div className="cancel-button">
                 <Button variant="contained" onClick={() => handleCancel(item)}>
                   <RxCross2 />
                 </Button>
@@ -86,4 +71,4 @@ const FriendRequest = () => {
   );
 };
 
-export default FriendRequest;
+export default CancelFriendRequest;
