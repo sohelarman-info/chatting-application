@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SlOptionsVertical } from "react-icons/sl";
 import "./style.css";
@@ -45,27 +45,46 @@ const CancelFriendRequest = () => {
           <SlOptionsVertical />
         </div>
       </div>
+
       <div className="friends-wrapper-scroll">
-        {friendRequest.map((item, i) => (
-          <div className="friends-item-wraper">
-            <div className="friends-item-pic">
-              <picture>
-                <img src="./images/friends/1.jpg" alt="friends friends" />
-              </picture>
-            </div>
-            <div className="friends-item-name">
-              <h5>{item.receivername}</h5>
-              <p>{item.id}</p>
-            </div>
-            <div className="friends-item-button">
-              <div className="cancel-button">
-                <Button variant="contained" onClick={() => handleCancel(item)}>
-                  <RxCross2 />
-                </Button>
+        {friendRequest.length == 0 ? (
+          <div className="empty-message">
+            <Alert severity="error">You don't hvae any block friend</Alert>
+          </div>
+        ) : (
+          friendRequest.map((item, i) => (
+            <div className="friends-item-wraper">
+              <div className="friends-item-pic">
+                <picture>
+                  <img
+                    src={
+                      item.receiverProfilePicture ||
+                      "/images/profile/avatar.png"
+                    }
+                    onError={(e) => {
+                      e.target.src = "/images/profile/avatar.png";
+                    }}
+                    alt=""
+                  />
+                </picture>
+              </div>
+              <div className="friends-item-name">
+                <h5>{item.receivername}</h5>
+                <p>{item.id}</p>
+              </div>
+              <div className="friends-item-button">
+                <div className="cancel-button">
+                  <Button
+                    variant="contained"
+                    onClick={() => handleCancel(item)}
+                  >
+                    <RxCross2 />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SlOptionsVertical } from "react-icons/sl";
 import { RxCross2 } from "react-icons/rx";
@@ -18,6 +18,8 @@ const FriendRequest = () => {
   const db = getDatabase();
   const [friendRequest, setFriendRequest] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
+  const [disabled, setDisabled] = useState(false);
+
   // read friend request
   useEffect(() => {
     const starCountRef = ref(db, "friendrequest/");
@@ -35,10 +37,12 @@ const FriendRequest = () => {
 
   // friend request accept
   const handleAccept = (item) => {
+    setDisabled(true);
     set(push(ref(db, "friends/")), {
       ...item,
     }).then(() => {
       remove(ref(db, "friendrequest/" + item.requestKey));
+      setDisabled(false);
     });
   };
 
@@ -56,31 +60,57 @@ const FriendRequest = () => {
         </div>
       </div>
       <div className="friends-wrapper-scroll">
-        {friendRequest.map((item, i) => (
-          <div className="friends-item-wraper">
-            <div className="friends-item-pic">
-              <picture>
-                <img src="./images/friends/1.jpg" alt="friends friends" />
-              </picture>
-            </div>
-            <div className="friends-item-name">
-              <h5>{item.sendername}</h5>
-              <p>{item.id}</p>
-            </div>
-            <div className="friends-item-button">
-              <div className="accept-button">
-                <Button variant="contained" onClick={() => handleAccept(item)}>
-                  <BsCheck2 />
-                </Button>
-              </div>
-              <div className="reject-button">
-                <Button variant="contained" onClick={() => handleCancel(item)}>
-                  <RxCross2 />
-                </Button>
-              </div>
-            </div>
+        {friendRequest.length == 0 ? (
+          <div className="empty-message">
+            <Alert severity="error">You don't hvae any friend request</Alert>
           </div>
-        ))}
+        ) : (
+          friendRequest.map((item, i) => (
+            <div className="friends-item-wraper">
+              <div className="friends-item-pic">
+                <picture>
+                  <img
+                    src={
+                      item.senderProfilePicture || "/images/profile/avatar.png"
+                    }
+                    onError={(e) => {
+                      e.target.src = "/images/profile/avatar.png";
+                    }}
+                    alt=""
+                  />
+                </picture>
+              </div>
+              <div className="friends-item-name">
+                <h5>{item.sendername}</h5>
+                <p>{item.id}</p>
+              </div>
+              <div className="friends-item-button">
+                <div className="accept-button">
+                  {disabled ? (
+                    <Button variant="contained" disabled>
+                      <BsCheck2 />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAccept(item)}
+                    >
+                      <BsCheck2 />
+                    </Button>
+                  )}
+                </div>
+                <div className="reject-button">
+                  <Button
+                    variant="contained"
+                    onClick={() => handleCancel(item)}
+                  >
+                    <RxCross2 />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

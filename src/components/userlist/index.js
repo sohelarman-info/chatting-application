@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   getDatabase,
@@ -17,8 +17,16 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { CgUnblock } from "react-icons/cg";
 import { BiBlock } from "react-icons/bi";
 
+// Profile pic Upload
+import {
+  getStorage,
+  ref as storageRef,
+  getDownloadURL,
+} from "firebase/storage";
+
 const UserList = () => {
   const db = getDatabase();
+  const storage = getStorage();
   const [userlists, setUserlists] = useState([]);
   const [friendRequest, setFriendRequest] = useState([]);
   const [cancelRequest, setCancelRequest] = useState([]);
@@ -31,19 +39,54 @@ const UserList = () => {
   const [blockFriends, setBlockFriends] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
 
-  useEffect(() => {
-    const starCountRef = ref(db, "users/");
+  // read user
+  // useEffect(() => {
+  //   const starCountRef = ref(db, "users/");
 
-    onValue(starCountRef, (snapshot) => {
-      const userArray = [];
+  //   onValue(starCountRef, (snapshot) => {
+  //     const userArray = [];
+  //     snapshot.forEach((userData) => {
+  //       if (user.uid != userData.key) {
+  //         userArray.push({
+  //           ...userData.val(),
+  //           id: userData.key,
+  //         });
+  //       }
+  //     });
+  //     setUserlists(userArray);
+  //   });
+  // }, []);
+
+  // Read User with profile pic
+
+  useEffect(() => {
+    const fetchUsers = ref(db, "users");
+    onValue(fetchUsers, (snapshot) => {
+      let usersArr = [];
       snapshot.forEach((userData) => {
-        if (user.uid != userData.key) {
-          userArray.push({ ...userData.val(), id: userData.key });
+        if (user.uid !== userData.key) {
+          getDownloadURL(storageRef(storage, userData.key))
+            .then((url) => {
+              usersArr.push({
+                ...userData.val(),
+                id: userData.key,
+                profilePicture: url,
+              });
+            })
+            .catch((error) => {
+              usersArr.push({
+                ...userData.val(),
+                id: userData.key,
+                profilePicture: null,
+              });
+            })
+            .then(() => {
+              setUserlists([...usersArr]);
+            });
         }
       });
-      setUserlists(userArray);
     });
-  }, []);
+  }, [db, storage, user.uid]);
 
   // send request
   const handleRequestSend = (item) => {
@@ -52,6 +95,8 @@ const UserList = () => {
       sendername: user.displayName,
       receiverid: item.id,
       receivername: item.username,
+      receiverProfilePicture: item.profilePicture,
+      senderProfilePicture: user.photoURL,
     });
   };
 
@@ -195,16 +240,23 @@ const UserList = () => {
     setUnblockDisabled(true);
     unblock.map((item) => {
       if (userInfo.id === item.blockid) {
-        set(push(ref(db, "friends")), {
-          receiverid: item.receiverid,
-          receivername: item.receivername,
-          requestKey: item.requestKey,
-          senderid: item.senderid,
-          sendername: item.sendername,
-        }).then(() => {
+        if (item.senderid === item.blockbyid) {
           remove(ref(db, "block/" + item.blockKey));
           setUnblockDisabled(false);
-        });
+        } else {
+          set(push(ref(db, "friends")), {
+            receiverid: item.receiverid,
+            receivername: item.receivername,
+            requestKey: item.requestKey,
+            senderid: item.senderid,
+            sendername: item.sendername,
+            receiverProfilePicture: item.receiverProfilePicture,
+            senderProfilePicture: item.senderProfilePicture,
+          }).then(() => {
+            remove(ref(db, "block/" + item.blockKey));
+            setUnblockDisabled(false);
+          });
+        }
       } else {
         console.log("something problem");
       }
@@ -219,67 +271,80 @@ const UserList = () => {
           <SlOptionsVertical />
         </div>
       </div>
+
       <div className="users-wrapper-scroll">
-        {userlists.map((item, i) => (
-          <div key={i} className="users-item-wraper">
-            <div className="users-item-pic">
-              <picture>
-                <img src="./images/friends/1.jpg" alt="friends friends" />
-              </picture>
-            </div>
-            <div className="users-item-name">
-              <h5>{item.username}</h5>
-              <p>{item.id}</p>
-            </div>
-            <div className="users-item-button">
-              <div className="users-block-button">
-                {friendRequest.includes(item.id + user.uid) ? (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleCancelRequest(item)}
-                  >
-                    <RxCross2 />
-                    Cancel
-                  </Button>
-                ) : friendRequest.includes(user.uid + item.id) ? (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleAccept(item)}
-                  >
-                    <BsCheck2 /> Accept
-                  </Button>
-                ) : friends.includes(item.id + user.uid) ||
-                  friends.includes(user.uid + item.id) ? (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleUnfriend(item)}
-                  >
-                    <FaUserTimes /> Unfriend
-                  </Button>
-                ) : blockFriends.includes(item.id + user.uid) ? (
-                  <Button variant="contained" disabled>
-                    <BiBlock /> Blocked
-                  </Button>
-                ) : blockFriends.includes(user.uid + item.id) ? (
-                  <Button
-                    className="block-button"
-                    variant="contained"
-                    onClick={() => handleUnblock(item)}
-                  >
-                    <CgUnblock /> Unblocked
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleRequestSend(item)}
-                  >
-                    <FaUserPlus /> Add Friend
-                  </Button>
-                )}
+        {userlists.length == 1 ? (
+          <div className="empty-message">
+            <Alert severity="error">You don't hvae any block friend</Alert>
+          </div>
+        ) : (
+          userlists.map((item, i) => (
+            <div key={i} className="users-item-wraper">
+              <div className="users-item-pic">
+                <picture>
+                  <img
+                    src={item.profilePicture || "/images/profile/avatar.png"}
+                    onError={(e) => {
+                      e.target.src = "/images/profile/avatar.png";
+                    }}
+                    alt=""
+                  />
+                </picture>
+              </div>
+              <div className="users-item-name">
+                <h5>{item.username}</h5>
+                <p>{item.id}</p>
+              </div>
+              <div className="users-item-button">
+                <div className="users-block-button">
+                  {friendRequest.includes(item.id + user.uid) ? (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleCancelRequest(item)}
+                    >
+                      <RxCross2 />
+                      Cancel
+                    </Button>
+                  ) : friendRequest.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAccept(item)}
+                    >
+                      <BsCheck2 /> Accept
+                    </Button>
+                  ) : friends.includes(item.id + user.uid) ||
+                    friends.includes(user.uid + item.id) ? (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleUnfriend(item)}
+                    >
+                      <FaUserTimes /> Unfriend
+                    </Button>
+                  ) : blockFriends.includes(item.id + user.uid) ? (
+                    <Button variant="contained" disabled>
+                      <BiBlock /> Blocked
+                    </Button>
+                  ) : blockFriends.includes(user.uid + item.id) ? (
+                    <Button
+                      className="block-button"
+                      variant="contained"
+                      onClick={() => handleUnblock(item)}
+                    >
+                      <CgUnblock /> Unblocked
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleRequestSend(item)}
+                    >
+                      <FaUserPlus /> Add Friend
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

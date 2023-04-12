@@ -40,7 +40,7 @@ const Sidebar = () => {
               <picture>
                 {users.photoURL == null ? (
                   <img
-                    src="./images/profile/avatar.jpg"
+                    src="./images/profile/avatar.png"
                     alt={users.displayName}
                   />
                 ) : (

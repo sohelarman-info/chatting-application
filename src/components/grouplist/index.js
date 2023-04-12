@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SlOptionsVertical } from "react-icons/sl";
 import Modal from "@mui/material/Modal";
@@ -22,13 +22,13 @@ const GroupList = () => {
     onValue(starCountRef, (snapshot) => {
       let groupsArray = [];
       snapshot.forEach((item) => {
-        groupsArray.push({ ...item.val(), id: item.key });
+        if (user.uid != item.val().adminid) {
+          groupsArray.push({ ...item.val(), id: item.key });
+        }
       });
       setGroups(groupsArray);
     });
   }, []);
-
-  console.log(groups);
 
   const style = {
     position: "absolute",
@@ -49,6 +49,20 @@ const GroupList = () => {
       groupname: groupName,
       grouptag: groupTag,
     }).then(setOpen(false));
+  };
+
+  const handleJoin = (item) => {
+    console.log(item.id);
+    set(push(ref(db, "groupjoinrequest/")), {
+      groupid: item.id,
+      adminid: item.adminid,
+      userid: user.uid,
+      userProfilePic: user.photoURL,
+      username: user.displayName,
+      adminname: item.adminname,
+      groupname: item.groupname,
+      grouptag: item.grouptag,
+    });
   };
 
   return (
@@ -109,23 +123,35 @@ const GroupList = () => {
           <SlOptionsVertical />
         </div>
       </div>
+
       <div className="group-wrapper-scroll">
-        {groups.map((item, i) => (
-          <div className="group-item-wraper" key={i}>
-            <div className="group-item-pic">
-              <picture>
-                <img src="./images/group/friends.jpg" alt="friends group" />
-              </picture>
-            </div>
-            <div className="group-item-name">
-              <h5>{item.groupname}</h5>
-              <p>{item.grouptag}</p>
-            </div>
-            <div className="group-item-button">
-              <Button variant="contained">Join</Button>
-            </div>
+        {groups.length == 0 ? (
+          <div className="empty-message">
+            <Alert severity="error">You don't hvae any block friend</Alert>
           </div>
-        ))}
+        ) : (
+          groups.map((item, i) => (
+            <div className="group-item-wraper" key={i}>
+              <div className="group-item-pic">
+                <picture>
+                  <img src="./images/group/friends.jpg" alt="friends group" />
+                </picture>
+              </div>
+              <div className="group-item-name">
+                <h5>{item.groupname}</h5>
+                <p>
+                  {item.grouptag}
+                  <span className="groupadmin">{item.adminname}</span>
+                </p>
+              </div>
+              <div className="group-item-button">
+                <Button variant="contained" onClick={() => handleJoin(item)}>
+                  Join
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

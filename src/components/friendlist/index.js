@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import {
   getDatabase,
   onValue,
@@ -49,7 +49,8 @@ const FriendList = () => {
         receivername: item.receivername,
         requestKey: item.requestKey,
         senderid: item.senderid,
-        sendername: item.sendername,
+        receiverProfilePicture: item.receiverProfilePicture,
+        senderProfilePicture: item.senderProfilePicture,
       }).then(() => {
         remove(ref(db, "friends/" + item.id));
         setDisabled(false);
@@ -65,6 +66,8 @@ const FriendList = () => {
         requestKey: item.requestKey,
         senderid: item.senderid,
         sendername: item.sendername,
+        receiverProfilePicture: item.receiverProfilePicture,
+        senderProfilePicture: item.senderProfilePicture,
       }).then(() => {
         remove(ref(db, "friends/" + item.id));
         setDisabled(false);
@@ -81,36 +84,57 @@ const FriendList = () => {
         </div>
       </div>
       <div className="friends-list-wrapper-scroll">
-        {friendList.map((item, i) => (
-          <div className="friends-item-wraper" key={i}>
-            <div className="friends-item-pic">
-              <picture>
-                <img src="./images/friends/1.jpg" alt="friends friends" />
-              </picture>
-            </div>
-            <div className="friends-item-name">
-              <h5>
-                {item.receiverid == user.uid
-                  ? item.sendername
-                  : item.receivername}
-              </h5>
-              <p>{item.id}</p>
-            </div>
-            <div className="friends-item-button">
-              <div className="friends-block-button">
-                {disabled ? (
-                  <Button variant="contained" disabled>
-                    Block
-                  </Button>
-                ) : (
-                  <Button variant="contained" onClick={() => handleBlock(item)}>
-                    Block
-                  </Button>
-                )}
+        {friendList.length == 0 ? (
+          <div className="empty-message">
+            <Alert severity="error">You don't hvae any friend</Alert>
+          </div>
+        ) : (
+          friendList.map((item, i) => (
+            <div className="friends-item-wraper" key={i}>
+              <div className="friends-item-pic">
+                <picture>
+                  <img
+                    src={
+                      user.uid == item.senderid
+                        ? item.receiverProfilePicture
+                        : user.uid == item.receiverid
+                        ? item.senderProfilePicture
+                        : "/images/profile/avatar.png"
+                    }
+                    onError={(e) => {
+                      e.target.src = "/images/profile/avatar.png";
+                    }}
+                    alt=""
+                  />
+                </picture>
+              </div>
+              <div className="friends-item-name">
+                <h5>
+                  {item.receiverid == user.uid
+                    ? item.sendername
+                    : item.receivername}
+                </h5>
+                <p>{item.id}</p>
+              </div>
+              <div className="friends-item-button">
+                <div className="friends-block-button">
+                  {disabled ? (
+                    <Button variant="contained" disabled>
+                      Block
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleBlock(item)}
+                    >
+                      Block
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

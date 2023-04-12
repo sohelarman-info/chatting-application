@@ -258,4 +258,5 @@
   fill: var(--theme-color);
   stroke: var(--theme-color);
   opacity: 100%;
+  margin-top: 10px;
 }
