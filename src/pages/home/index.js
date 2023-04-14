@@ -16,9 +16,6 @@ const Home = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div>
-            <SearchBox />
-          </div>
-          <div>
             <GroupList />
           </div>
           <div>

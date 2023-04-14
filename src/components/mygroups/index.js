@@ -19,6 +19,8 @@ const MyGroups = () => {
   const [groupRequestList, setGroupRequestList] = useState([]);
   const user = useSelector((users) => users.loginSlice.login);
   const [show, setShow] = useState(false);
+  const [memberShow, setMemberShow] = useState(false);
+  const [groupMembers, setGroupMembers] = useState([]);
   const db = getDatabase();
 
   useEffect(() => {
@@ -35,20 +37,22 @@ const MyGroups = () => {
     });
   }, []);
 
-  const handleMembers = (myitem) => {
+  const handleJoinRequest = (myitem) => {
     setShow(true);
     const starCountRef = ref(db, "groupjoinrequest/");
 
     onValue(starCountRef, (snapshot) => {
       let groupReqArray = [];
       snapshot.forEach((item) => {
-        if (user.uid == item.val().adminid && item.val().groupid == myitem.id) {
+        if (user.uid == myitem.adminid && item.val().groupid == myitem.id) {
           groupReqArray.push({ ...item.val(), id: item.key });
         }
       });
       setGroupRequestList(groupReqArray);
     });
   };
+
+  // group members accept
 
   const handleRequestAccept = (item) => {
     set(push(ref(db, "groupmembers/")), {
@@ -62,6 +66,32 @@ const MyGroups = () => {
       grouptag: item.grouptag,
     }).then(() => {
       remove(ref(db, "groupjoinrequest/" + item.id));
+    });
+  };
+
+  // group members Reject
+
+  const handleReject = (item) => {
+    remove(ref(db, "groupjoinrequest/" + item.id));
+  };
+
+  // group member show
+
+  const handleInfo = (myitem) => {
+    setMemberShow(true);
+    const groupmembers = ref(db, "groupmembers/");
+
+    onValue(groupmembers, (snapshot) => {
+      let groupMemberArray = [];
+      snapshot.forEach((item) => {
+        if (user.uid == myitem.adminid && item.val().groupid == myitem.id) {
+          groupMemberArray.push({ ...item.val(), id: item.key });
+          console.log("asi");
+        } else {
+          console.log("nai");
+        }
+      });
+      setGroupMembers(groupMemberArray);
     });
   };
   return (
@@ -79,6 +109,15 @@ const MyGroups = () => {
             variant="outlined"
             size="small"
             onClick={() => setShow(false)}
+          >
+            Go Back
+          </Button>
+        )}
+        {memberShow && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setMemberShow(false)}
           >
             Go Back
           </Button>
@@ -117,10 +156,38 @@ const MyGroups = () => {
                     </Button>
                   </div>
                   <div className="reject-button">
-                    <Button variant="contained">
+                    <Button
+                      variant="contained"
+                      onClick={() => handleReject(item)}
+                    >
                       <RxCross2 />
                     </Button>
                   </div>
+                </div>
+              </div>
+            ))
+          )
+        ) : memberShow ? (
+          groupMembers.length == 0 ? (
+            <div className="empty-message">
+              <Alert severity="error">You don't have any members.</Alert>
+            </div>
+          ) : (
+            groupMembers.map((item, i) => (
+              <div className="mygroups-item-wraper" key={i}>
+                <div className="mygroups-item-pic">
+                  <picture>
+                    <img src={item.userProfilePic} alt={item.username} />
+                  </picture>
+                </div>
+                <div className="mygroups-item-name">
+                  <h5>{item.username}</h5>
+                  <p>
+                    <span className="groupadmin">{item.groupname}</span>
+                  </p>
+                </div>
+                <div className="members-btn">
+                  <Button variant="contained">profile</Button>
                 </div>
               </div>
             ))
@@ -141,19 +208,27 @@ const MyGroups = () => {
                 </p>
               </div>
               <div className="mygroups-item-button">
-                <Button size="small" variant="contained">
-                  info
-                </Button>
                 <div className="members-btn">
                   <Button
-                    onClick={() => handleMembers(item)}
-                    className="members-btn"
                     size="small"
                     variant="contained"
+                    onClick={() => handleInfo(item)}
+                    className="member-btn"
                   >
                     members
                   </Button>
-                  {/* <div className="bedge">{groupRequestList.length}</div> */}
+                  <div className="member-bedge">{groupMembers.length}</div>
+                </div>
+                <div className="request-btn">
+                  <Button
+                    onClick={() => handleJoinRequest(item)}
+                    className="request-btn"
+                    size="small"
+                    variant="contained"
+                  >
+                    request
+                  </Button>
+                  <div className="req-bedge">{groupRequestList.length}</div>
                 </div>
               </div>
             </div>

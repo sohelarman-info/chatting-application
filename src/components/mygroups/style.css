@@ -134,19 +134,50 @@
   color: var(--theme-text-color) !important;
 }
 
-.empty-message {
-  text-align: center;
+.members-btn button {
+  width: 100%;
+  background-color: var(--theme-color) !important;
+  color: var(--theme-text-color) !important;
+  margin-top: 20px !important;
 }
 
-.members-btn {
-  margin-top: 5px !important;
+.members-btn button:hover {
+  background-color: var(--theme-color) !important;
+  color: var(--theme-text-color) !important;
+}
+
+.empty-message {
+  text-align: center;
 }
 
 .members-btn {
   position: relative;
 }
 
-.bedge {
+.member-bedge {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-color);
+  font-size: 10px;
+  bottom: -5px;
+  right: -5px;
+}
+
+.request-btn {
+  margin-top: 5px !important;
+}
+
+.request-btn {
+  position: relative;
+}
+
+.req-bedge {
   position: absolute;
   width: 15px;
   height: 15px;

@@ -8,6 +8,10 @@
   margin-bottom: 20px;
 }
 
+.user-search {
+  margin-top: 15px !important;
+}
+
 .users-wrapper-scroll {
   width: 100%;
   height: 410px;
