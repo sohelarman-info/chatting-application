@@ -69,11 +69,11 @@ const GroupList = () => {
 
   // Group Search Funtionality
   const handleGroupSearch = (e) => {
+    let groupArray = [];
+    if (e.target.value.length === 0) {
+      setGroupSearch([]);
+    }
     groups.filter((item) => {
-      let groupArray = [];
-      if (e.target.value.length == 0) {
-        setGroupSearch([]);
-      }
       if (item.groupname.toLowerCase().includes(e.target.value.toLowerCase())) {
         groupArray.push(item);
         setGroupSearch(groupArray);
@@ -154,7 +154,7 @@ const GroupList = () => {
       </div>
 
       <div className="group-wrapper-scroll">
-        {groups.length == 0 ? (
+        {groups.length === 0 ? (
           <div className="empty-message">
             <Alert severity="error">You don't hvae any group</Alert>
           </div>

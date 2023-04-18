@@ -15,9 +15,11 @@ import { toast, ToastContainer } from "react-toastify";
 import { signIn } from "../../validation/validation";
 import "./style.css";
 import { Loginuser } from "../../features/slice/UserSlice";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Login = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const [passShow, setPassShow] = useState("password");
   const [loader, setLoader] = useState(false);
   const googleProvider = new GoogleAuthProvider();
@@ -109,6 +111,10 @@ const Login = () => {
     signInWithPopup(auth, googleProvider).then(({ user }) => {
       dispatch(Loginuser(user));
       localStorage.setItem("users", JSON.stringify(user));
+      set(ref(db, "users/" + user.uid), {
+        username: user.displayName,
+        email: user.email,
+      });
       navigate("/");
     });
   };

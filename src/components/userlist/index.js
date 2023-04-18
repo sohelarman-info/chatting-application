@@ -259,19 +259,17 @@ const UserList = () => {
             setUnblockDisabled(false);
           });
         }
-      } else {
-        console.log("something problem");
       }
     });
   };
 
   // user Search Funtionality
   const handleUserSearch = (e) => {
+    let userArray = [];
+    if (e.target.value.length === 0) {
+      setUserSearch([]);
+    }
     userlists.filter((item) => {
-      let userArray = [];
-      if (e.target.value.length == 0) {
-        setUserSearch([]);
-      }
       if (item.username.toLowerCase().includes(e.target.value.toLowerCase())) {
         userArray.push(item);
         setUserSearch(userArray);
