@@ -36,9 +36,6 @@
 .group-list-header {
   padding: 1px 0;
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .group-list-header h4 {
@@ -46,10 +43,6 @@
   font-weight: var(--bold);
   color: var(--black);
   text-transform: capitalize;
-}
-
-.create-group {
-  margin-right: 30px;
 }
 
 .group-list-option {

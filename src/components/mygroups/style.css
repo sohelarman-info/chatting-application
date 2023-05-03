@@ -9,12 +9,19 @@
 .mygroups-list-header {
   padding: 1px 0;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .mygroups-list-header h4 {
   font-size: 20px;
   text-transform: capitalize;
   font-weight: var(--bold);
   color: var(--black);
+}
+
+.create-group {
+  margin-right: 30px;
 }
 
 .mygroups-list-option {

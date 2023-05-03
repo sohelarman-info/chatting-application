@@ -9,7 +9,8 @@ import {
   remove,
   set,
 } from "firebase/database";
-import { Alert, Button } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import Modal from "@mui/material/Modal";
 import { useSelector } from "react-redux";
 import { RxCross2 } from "react-icons/rx";
 import { BsCheck2 } from "react-icons/bs";
@@ -21,6 +22,12 @@ const MyGroups = () => {
   const [show, setShow] = useState(false);
   const [memberShow, setMemberShow] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [groupTag, setGroupTag] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const db = getDatabase();
 
   useEffect(() => {
@@ -50,6 +57,29 @@ const MyGroups = () => {
       });
       setGroupRequestList(groupReqArray);
     });
+  };
+
+  // create group
+
+  const handleCreate = () => {
+    set(push(ref(db, "groups/")), {
+      adminid: user.uid,
+      adminname: user.displayName,
+      groupname: groupName,
+      grouptag: groupTag,
+    }).then(setOpen(false));
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
   };
 
   // group members accept
@@ -98,6 +128,57 @@ const MyGroups = () => {
     <div className="mygroups-wrapper">
       <div className="mygroups-list-header">
         <h4>My Groups</h4>
+
+        <div className="create-group">
+          <Button
+            onClick={handleOpen}
+            color="success"
+            variant="contained"
+            size="small"
+          >
+            Create Group
+          </Button>
+        </div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Create Your Group
+            </Typography>
+            <div className="group-name-field">
+              <TextField
+                id="outlined-basic"
+                label="Group Name"
+                variant="outlined"
+                className="field"
+                onChange={(e) => setGroupName(e.target.value)}
+              />
+            </div>
+            <div className="group-groupTag-field">
+              <TextField
+                id="outlined-basic"
+                label="Group Tag"
+                variant="outlined"
+                className="field"
+                onChange={(e) => setGroupTag(e.target.value)}
+              />
+            </div>
+            <div className="group-submit">
+              <Button
+                variant="contained"
+                className="group-submit-btn"
+                size="large"
+                onClick={handleCreate}
+              >
+                Create Group
+              </Button>
+            </div>
+          </Box>
+        </Modal>
         <div className="mygroups-list-option">
           <SlOptionsVertical />
         </div>

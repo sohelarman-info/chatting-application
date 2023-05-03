@@ -127,6 +127,7 @@
   z-index: 1;
   cursor: pointer;
   box-sizing: border-box;
+  display: block;
 }
 
 .page-icon::after {
@@ -172,6 +173,21 @@
 }
 
 .page-icon:hover svg {
+  fill: var(--theme-color);
+  stroke: var(--theme-color);
+  opacity: 100%;
+}
+.page-icon.active::after {
+  opacity: 1;
+  width: 85%;
+}
+
+.page-icon.active::before {
+  opacity: 1;
+  width: 8px;
+}
+
+.page-icon.active svg {
   fill: var(--theme-color);
   stroke: var(--theme-color);
   opacity: 100%;

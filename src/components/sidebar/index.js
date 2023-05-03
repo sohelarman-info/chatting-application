@@ -5,10 +5,16 @@ import { ImExit } from "react-icons/im";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Loginuser } from "../../features/slice/UserSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import { AiOutlineCloudUpload } from "react-icons/ai";
+import {
+  AiOutlineCloudUpload,
+  AiOutlineHome,
+  AiOutlineSetting,
+} from "react-icons/ai";
 import ProfileModal from "../modal/profilemodal";
+import { BsChatDots } from "react-icons/bs";
+import { FaRegBell } from "react-icons/fa";
 
 const Sidebar = () => {
   const auth = getAuth();
@@ -56,7 +62,19 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="page-section">
-            <SidebarIcons />
+            <NavLink to="/" className="page-icon">
+              <AiOutlineHome />
+            </NavLink>
+            <NavLink to="/messages" className="page-icon">
+              <BsChatDots />
+            </NavLink>
+
+            <div className="page-icon">
+              <FaRegBell />
+            </div>
+            <div className="page-icon">
+              <AiOutlineSetting />
+            </div>
           </div>
           <div className="logout-section">
             <div className="logout-icon" onClick={handlelogout}>
