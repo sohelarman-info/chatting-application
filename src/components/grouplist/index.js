@@ -21,6 +21,7 @@ const GroupList = () => {
   const [cancelRequest, setCancelRequest] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [joinRequest, setJoinRequest] = useState([]);
+  const [groupMember, setGroupMember] = useState([]);
 
   useEffect(() => {
     const starCountRef = ref(db, "groups/");
@@ -91,6 +92,20 @@ const GroupList = () => {
         requestArray.push({ ...item, id: item.key });
       });
       setJoinRequest(requestArray);
+    });
+  }, []);
+
+  // show group group member button
+  useEffect(() => {
+    const starCountRef = ref(db, "groupmembers/");
+
+    onValue(starCountRef, (snapshot) => {
+      let memberArray = [];
+      snapshot.forEach((item) => {
+        memberArray.push(item.val().groupid + item.val().userid);
+        memberArray.push({ ...item, id: item.key });
+      });
+      setGroupMember(memberArray);
     });
   }, []);
 
@@ -179,6 +194,10 @@ const GroupList = () => {
                     onClick={() => handleJoinCancel(item)}
                   >
                     Cancel
+                  </Button>
+                ) : groupMember.includes(item.id + user.uid) ? (
+                  <Button variant="contained" disabled>
+                    Member
                   </Button>
                 ) : disabled ? (
                   <Button variant="contained" disabled>
