@@ -38,20 +38,22 @@ const ChatGroup = () => {
   };
   return (
     <div className="chat-list-wrapper">
-      <div className="chat-list-header">
-        <h4>Groups List</h4>
-      </div>
-
-      <div className="search-wrapper user-search">
-        <div className="search-icon">
-          <FiSearch />
+      <div className="header-wrapper">
+        <div className="chat-list-header">
+          <h4>Groups List</h4>
         </div>
-        <div className="search-input">
-          <input
-            onChange={handleGroupSearch}
-            type="text"
-            placeholder="Search"
-          />
+
+        <div className="search-wrapper user-search">
+          <div className="search-icon">
+            <FiSearch />
+          </div>
+          <div className="search-input">
+            <input
+              onChange={handleGroupSearch}
+              type="text"
+              placeholder="Search"
+            />
+          </div>
         </div>
       </div>
 

@@ -12,6 +12,14 @@
   overflow: hidden;
 }
 
+.coversation-empty-message {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .message-box {
   padding: 20px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
@@ -242,11 +250,13 @@
   background-color: #f1f1f1;
   border-radius: 10px;
   padding: 10px;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .chat-input input {
-  width: 90%;
+  width: 95%;
   height: 100%;
   background-color: #f1f1f1;
   font-family: var(--primary-font);
@@ -262,16 +272,6 @@
   right: 10px;
 }
 
-.MuiFab-circular {
-  background-color: var(--theme-color) !important;
-  width: 40px !important;
-  height: 40px !important;
-}
-
-.MuiFab-circular svg path {
-  color: #fff !important;
-}
-
 .chat-send-button {
   width: 6%;
 }
@@ -285,4 +285,86 @@
   width: 25px;
   height: 25px;
 }
+
+.chat-files {
+  width: 5%;
+}
+
+.add-files {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.add-files-area {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  width: 80px;
+  height: 200px;
+  background-color: #f1f1f1;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: auto;
+}
+
+.add-gallery {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #fff;
+  padding: 10px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-gallery:last-child {
+  border-bottom: none;
+}
+
+.add-gallery svg {
+  width: 25px;
+  height: 25px;
+}
+
+/* Camera css start */
+.open-camera {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.camera-close {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+/* Camera css end */
+
 /* chat input area css end  */
