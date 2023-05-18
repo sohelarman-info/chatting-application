@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaTelegramPlane } from "react-icons/fa";
@@ -12,10 +12,13 @@ import { Button } from "@mui/material";
 import Camera, { FACING_MODES, IMAGE_TYPES } from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import moment from "moment/moment";
 
 const ChatBox = () => {
   const [open, setOpen] = useState(false);
   const [openCamera, setOpenCamera] = useState(false);
+  const user = useSelector((users) => users.loginSlice.login);
 
   // Photo capture functionality
 
@@ -48,6 +51,42 @@ const ChatBox = () => {
 
   const activeChatName = useSelector((state) => state.active.active);
 
+  // msg send functionality
+  const [message, setMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
+  const db = getDatabase();
+  const handleSendMessage = (e) => {
+    set(push(ref(db, "chat/")), {
+      whosendid: user.uid,
+      whosendname: user.displayName,
+      whosendphoto: user.photoURL,
+      whoreceiveid: activeChatName.id,
+      whoreceivename: activeChatName.name,
+      whoreceivephoto: activeChatName.photo,
+      message: message,
+      date: `${new Date()}`,
+    }).then(() => setMessage(""));
+  };
+
+  // read message
+
+  useEffect(() => {
+    onValue(ref(db, "chat"), (snapshot) => {
+      let singleMessage = [];
+      snapshot.forEach((item) => {
+        if (
+          (item.val().whosendid == user.uid &&
+            item.val().whoreceiveid == activeChatName.id) ||
+          (item.val().whoreceiveid == user.uid &&
+            item.val().whosendid == activeChatName.id)
+        ) {
+          singleMessage.push(item.val());
+        }
+        setMessageList(singleMessage);
+      });
+    });
+  }, [activeChatName.id]);
+
   return (
     <>
       <div className="fixed-layout" fixed>
@@ -73,7 +112,44 @@ const ChatBox = () => {
             </div>
             <div className="message-box">
               <div className="chat-scroll">
-                <div className="message-left">
+                {activeChatName.status == "single"
+                  ? messageList.map((item, i) =>
+                      item.whosendid == user.uid ? (
+                        item.message ? (
+                          <div key={i}>
+                            <div className="message-right">
+                              <div className="message-right-text">
+                                <p>{item.message}</p>
+                              </div>
+                              <div className="message-right-time">
+                                <p>
+                                  {moment(item.date).format("MMMM DD, h:mm a")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          "img"
+                        )
+                      ) : item.message ? (
+                        <div key={i}>
+                          <div className="message-left">
+                            <div className="message-left-text">
+                              <p>{item.message}</p>
+                            </div>
+                            <div className="message-left-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        "img"
+                      )
+                    )
+                  : "chat for group"}
+                {/* <div className="message-left">
                   <div className="message-left-text">
                     <p>Hey There !</p>
                   </div>
@@ -185,12 +261,17 @@ const ChatBox = () => {
                   <div className="message-right-time">
                     <p>Today, 2:09pm</p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="chat-input-area">
               <div className="chat-input">
-                <input type="text" />
+                <input
+                  type="text"
+                  onChange={(e) => setMessage(e.target.value)}
+                  value={message}
+                  placeholder="Write message..."
+                />
                 <div className="chat-files">
                   <div className="add-files" onClick={() => setOpen(!open)}>
                     <AiOutlinePlus />
@@ -219,13 +300,25 @@ const ChatBox = () => {
                 </div>
               </div>
               <div className="chat-send-button">
-                <Button
-                  variant="contained"
-                  size="medium"
-                  className="send-button"
-                >
-                  <FaTelegramPlane />
-                </Button>
+                {message == "" ? (
+                  <Button
+                    disabled
+                    variant="contained"
+                    size="medium"
+                    className="send-button"
+                  >
+                    <FaTelegramPlane />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleSendMessage}
+                    variant="contained"
+                    size="medium"
+                    className="send-button"
+                  >
+                    <FaTelegramPlane />
+                  </Button>
+                )}
               </div>
             </div>
           </div>

@@ -51,9 +51,27 @@ const ChatFriends = () => {
           photo: item.senderProfilePicture,
         })
       );
+      localStorage.setItem(
+        "activeSingle",
+        JSON.stringify({
+          status: "single",
+          id: item.senderid,
+          name: item.sendername,
+          photo: item.senderProfilePicture,
+        })
+      );
     } else {
       dispatch(
         activeChat({
+          status: "single",
+          id: item.receiverid,
+          name: item.receivername,
+          photo: item.receiverProfilePicture,
+        })
+      );
+      localStorage.setItem(
+        "activeSingle",
+        JSON.stringify({
           status: "single",
           id: item.receiverid,
           name: item.receivername,
