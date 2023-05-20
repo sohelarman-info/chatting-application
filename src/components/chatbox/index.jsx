@@ -14,17 +14,48 @@ import "react-html5-camera-photo/build/css/index.css";
 import { useSelector } from "react-redux";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import moment from "moment/moment";
+import {
+  getStorage,
+  ref as sref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
 
 const ChatBox = () => {
   const [open, setOpen] = useState(false);
   const [openCamera, setOpenCamera] = useState(false);
   const user = useSelector((users) => users.loginSlice.login);
+  const [captureImage, setCaptureImage] = useState("");
+  const storage = getStorage();
 
   // Photo capture functionality
 
   function handleTakePhoto(dataUri) {
     // Do stuff with the photo...
-    console.log("takePhoto");
+    setCaptureImage(dataUri);
+    setOpenCamera(false);
+    let random = (Math.random() + 1).toString(36).substring(2);
+    const storageRef = sref(
+      storage,
+      "capture/" + user.uid + "/" + user.uid + random
+    );
+    uploadString(storageRef, dataUri, "data_url").then((snapshot) => {
+      getDownloadURL(storageRef).then((downloadURL) => {
+        set(push(ref(db, "chat/")), {
+          whosendid: user.uid,
+          whosendname: user.displayName,
+          whosendphoto: user.photoURL,
+          whoreceiveid: activeChatName.id,
+          whoreceivename: activeChatName.name,
+          whoreceivephoto: activeChatName.photo,
+          image: downloadURL,
+          date: `${new Date()}`,
+        }).then(() => {
+          setMessage("");
+        });
+      });
+    });
   }
 
   function handleTakePhotoAnimationDone(dataUri) {
@@ -129,7 +160,20 @@ const ChatBox = () => {
                             </div>
                           </div>
                         ) : (
-                          "img"
+                          <div className="message-right">
+                            <div className="message-right-text">
+                              <ModalImage
+                                small={item.image}
+                                large={item.image}
+                                alt={item.whosendname}
+                              />
+                            </div>
+                            <div className="message-right-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
+                          </div>
                         )
                       ) : item.message ? (
                         <div key={i}>
@@ -145,7 +189,18 @@ const ChatBox = () => {
                           </div>
                         </div>
                       ) : (
-                        "img"
+                        <div className="message-left">
+                          <div className="message-left-text">
+                            <ModalImage
+                              small={item.image}
+                              large={item.image}
+                              alt={item.whosendname}
+                            />
+                          </div>
+                          <div className="message-left-time">
+                            <p>{moment(item.date).format("MMMM DD, h:mm a")}</p>
+                          </div>
+                        </div>
                       )
                     )
                   : "chat for group"}

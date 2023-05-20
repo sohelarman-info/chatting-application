@@ -278,7 +278,7 @@
 
 .send-button {
   background-color: var(--theme-color) !important;
-  padding: 11px !important;
+  padding: 15px !important;
 }
 
 .send-button svg {
