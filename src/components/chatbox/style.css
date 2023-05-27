@@ -243,6 +243,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .chat-input {
@@ -256,7 +257,7 @@
 }
 
 .chat-input input {
-  width: 95%;
+  width: 85%;
   height: 100%;
   background-color: #f1f1f1;
   font-family: var(--primary-font);
@@ -287,13 +288,15 @@
 }
 
 .chat-files {
-  width: 5%;
+  width: 10%;
+  margin-left: 10px;
 }
 
 .add-files {
   width: 40px;
   height: 40px;
   background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -323,10 +326,12 @@
   text-align: center;
   border-bottom: 1px solid #fff;
   padding: 10px 0;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.camera-capture {
+  cursor: pointer;
 }
 
 .add-gallery:last-child {
@@ -366,5 +371,97 @@
   right: 30px;
 }
 /* Camera css end */
+
+.add-gallery label {
+  cursor: pointer;
+}
+
+/* audio record css start */
+.audio-recorded audio {
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.audio-recorder {
+  background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: #000;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.recording {
+  border-radius: 12px;
+  width: 80%;
+  height: 100%;
+  transition: all 0.2s ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.recording-button {
+  background-color: #fff !important;
+}
+
+.recording-button svg {
+  fill: red !important;
+  animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.audio-send-area {
+  display: flex;
+}
+
+.audio-delete-btn {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.audio-send-btn {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.audio-loading-btn {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
+  border-radius: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+/* audio record css end */
 
 /* chat input area css end  */

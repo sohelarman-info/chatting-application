@@ -22,7 +22,7 @@ const ProfilePicUpload = ({ setOpen }) => {
   const chooseFile = useRef(null);
   const storage = getStorage();
   const user = useSelector((user) => user.loginSlice.login);
-  const storageRef = ref(storage, user.uid);
+  const storageRef = ref(storage, "users/" + user.uid);
   const dispatch = useDispatch();
   const hanldeUploadProfile = (e) => {
     e.preventDefault();

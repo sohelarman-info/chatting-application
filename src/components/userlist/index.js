@@ -67,7 +67,7 @@ const UserList = () => {
       let usersArr = [];
       snapshot.forEach((userData) => {
         if (user.uid !== userData.key) {
-          getDownloadURL(storageRef(storage, userData.key))
+          getDownloadURL(storageRef(storage, "users/" + userData.key))
             .then((url) => {
               usersArr.push({
                 ...userData.val(),
