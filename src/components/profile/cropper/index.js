@@ -5,6 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { BeatLoader } from "react-spinners";
 import "./style.css";
 import "cropperjs/dist/cropper.css";
+//https://www.npmjs.com/package/react-cropper
 
 const ImageCropper = ({
   image,
@@ -38,7 +39,7 @@ const ImageCropper = ({
           background={false}
           responsive={true}
           autoCropArea={1}
-          checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+          checkOrientation={false}
           onInitialized={(instance) => {
             setCropper(instance);
           }}

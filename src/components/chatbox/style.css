@@ -20,6 +20,10 @@
   justify-content: center;
 }
 
+.coversation-empty-message svg {
+  width: 100% !important;
+}
+
 .message-box {
   padding: 20px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
@@ -257,7 +261,7 @@
 }
 
 .chat-input input {
-  width: 85%;
+  width: 70%;
   height: 100%;
   background-color: #f1f1f1;
   font-family: var(--primary-font);
@@ -289,7 +293,6 @@
 
 .chat-files {
   width: 10%;
-  margin-left: 10px;
 }
 
 .add-files {
@@ -321,6 +324,25 @@
   cursor: auto;
 }
 
+.emoji-chat {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px #bebebe;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.emoji-picker {
+  position: absolute;
+  top: -465px;
+  right: 0;
+}
+
 .add-gallery {
   width: 100%;
   text-align: center;
@@ -341,6 +363,11 @@
 .add-gallery svg {
   width: 25px;
   height: 25px;
+}
+
+.open-audio-canvas {
+  cursor: pointer;
+  padding: 5px;
 }
 
 /* Camera css start */

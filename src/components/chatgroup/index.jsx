@@ -2,14 +2,16 @@ import { Alert } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./style.css";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FiSearch } from "react-icons/fi";
+import { activeChat } from "../../features/slice/activeSingleSlice";
 
 const ChatGroup = () => {
   const user = useSelector((users) => users.loginSlice.login);
   const db = getDatabase();
   const [groups, setGroups] = useState([]);
   const [groupSearch, setGroupSearch] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const starCountRef = ref(db, "groups/");
@@ -35,6 +37,19 @@ const ChatGroup = () => {
         setGroupSearch(groupArray);
       }
     });
+  };
+
+  // group chat functionality
+  const handleActiveGroup = (item) => {
+    console.log(item);
+    dispatch(
+      activeChat({
+        status: "group",
+        groupid: item.id,
+        name: item.groupname,
+        adminid: item.adminid,
+      })
+    );
   };
   return (
     <div className="chat-list-wrapper">
@@ -64,7 +79,11 @@ const ChatGroup = () => {
           </div>
         ) : groupSearch.length > 0 ? (
           groupSearch.map((item, i) => (
-            <div className="chat-group-item-wraper" key={i}>
+            <div
+              className="chat-group-item-wraper"
+              key={i}
+              onClick={() => handleActiveGroup(item)}
+            >
               <div className="chat-group-item-pic">
                 <picture>
                   <img src="./images/group/friends.jpg" alt="friends group" />
@@ -78,7 +97,11 @@ const ChatGroup = () => {
           ))
         ) : (
           groups.map((item, i) => (
-            <div className="chat-group-item-wraper" key={i}>
+            <div
+              className="chat-group-item-wraper"
+              key={i}
+              onClick={() => handleActiveGroup(item)}
+            >
               <div className="chat-group-item-pic">
                 <picture>
                   <img src="./images/group/friends.jpg" alt="friends group" />

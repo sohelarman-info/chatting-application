@@ -388,6 +388,7 @@ const UserList = () => {
                 <div className="users-item-name">
                   <h5>{item.username}</h5>
                   <p>{item.id}</p>
+                  <p>{item.email}</p>
                 </div>
                 <div className="users-item-button">
                   <div className="users-block-button">

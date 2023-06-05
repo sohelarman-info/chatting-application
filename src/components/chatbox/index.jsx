@@ -5,10 +5,17 @@ import "./style.css";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaTelegramPlane } from "react-icons/fa";
 import { RiRecordCircleLine } from "react-icons/ri";
+import { BsEmojiSmile } from "react-icons/bs";
 import { FiCamera } from "react-icons/fi";
 import { BiMicrophone } from "react-icons/bi";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
+
+// Lottie Animation
+import Lottie from "lottie-react";
+import Find from "../lottie/find.json";
+
+import EmojiPicker from "emoji-picker-react";
 import {
   MdOutlinePhotoSizeSelectActual,
   MdScheduleSend,
@@ -32,15 +39,39 @@ import {
 import { ScaleLoader } from "react-spinners";
 
 const ChatBox = () => {
+  // redux state
+  const user = useSelector((users) => users.loginSlice.login);
+
+  //Camera state
   const [open, setOpen] = useState(false);
   const [openCamera, setOpenCamera] = useState(false);
-  const user = useSelector((users) => users.loginSlice.login);
   const [captureImage, setCaptureImage] = useState("");
+
+  //audio state
   const [audioURL, setAudioURL] = useState("");
   const [blob, setBlob] = useState("");
   const [showAudio, setShowAudio] = useState(false);
+
+  // emoji state
+  const [showEmoji, setShowEmoji] = useState(false);
+
+  // Loader state
   const [loader, setLoader] = useState(false);
+
+  // firebase state
+  const db = getDatabase();
   const storage = getStorage();
+
+  // msg state
+  const [message, setMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
+  const scrollMsg = useRef(null);
+
+  // Emoji Picker Functionality
+
+  const handleEmojiClick = (emoji) => {
+    setMessage(message + emoji.emoji);
+  };
 
   // Photo capture functionality
 
@@ -134,9 +165,12 @@ const ChatBox = () => {
   const activeChatName = useSelector((state) => state.active.active);
 
   // msg send functionality
-  const [message, setMessage] = useState("");
-  const [messageList, setMessageList] = useState([]);
-  const db = getDatabase();
+
+  const handleMessageInput = (e) => {
+    setMessage(e.target.value.trimStart());
+    setShowEmoji(false);
+  };
+
   const handleSendMessage = (e) => {
     set(push(ref(db, "chat/")), {
       whosendid: user.uid,
@@ -217,12 +251,19 @@ const ChatBox = () => {
     });
   }, [activeChatName?.id]);
 
+  // scroll functionality
+  useEffect(() => {
+    scrollMsg?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageList]);
+
   return (
     <>
       <div className="fixed-layout" fixed>
         {activeChatName == null ? (
           <div className="coversation-empty-message">
-            <h3>Your coversation empty</h3>
+            <h3>
+              <Lottie animationData={Find} loop={true} />
+            </h3>
           </div>
         ) : (
           <div className="chatbox-wrapper">
@@ -243,13 +284,32 @@ const ChatBox = () => {
             <div className="message-box">
               <div className="chat-scroll">
                 {activeChatName.status == "single"
-                  ? messageList.map((item, i) =>
-                      item.whosendid == user.uid ? (
-                        item.message ? (
-                          <div key={i}>
+                  ? messageList.map((item, i) => (
+                      <div ref={scrollMsg}>
+                        {item.whosendid == user.uid ? (
+                          item.message ? (
+                            <div key={i}>
+                              <div className="message-right">
+                                <div className="message-right-text">
+                                  <p>{item.message}</p>
+                                </div>
+                                <div className="message-right-time">
+                                  <p>
+                                    {moment(item.date).format(
+                                      "MMMM DD, h:mm a"
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ) : item.image ? (
                             <div className="message-right">
                               <div className="message-right-text">
-                                <p>{item.message}</p>
+                                <ModalImage
+                                  small={item.image}
+                                  large={item.image}
+                                  alt={item.whosendname}
+                                />
                               </div>
                               <div className="message-right-time">
                                 <p>
@@ -257,39 +317,39 @@ const ChatBox = () => {
                                 </p>
                               </div>
                             </div>
+                          ) : (
+                            <div className="message-right">
+                              <div className="message-right-text">
+                                <audio src={item.audio} controls></audio>
+                              </div>
+                              <div className="message-right-time">
+                                <p>
+                                  {moment(item.date).format("MMMM DD, h:mm a")}
+                                </p>
+                              </div>
+                            </div>
+                          )
+                        ) : item.message ? (
+                          <div key={i}>
+                            <div className="message-left">
+                              <div className="message-left-text">
+                                <p>{item.message}</p>
+                              </div>
+                              <div className="message-left-time">
+                                <p>
+                                  {moment(item.date).format("MMMM DD, h:mm a")}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         ) : item.image ? (
-                          <div className="message-right">
-                            <div className="message-right-text">
+                          <div className="message-left">
+                            <div className="message-left-text">
                               <ModalImage
                                 small={item.image}
                                 large={item.image}
                                 alt={item.whosendname}
                               />
-                            </div>
-                            <div className="message-right-time">
-                              <p>
-                                {moment(item.date).format("MMMM DD, h:mm a")}
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="message-right">
-                            <div className="message-right-text">
-                              <audio src={item.audio} controls></audio>
-                            </div>
-                            <div className="message-right-time">
-                              <p>
-                                {moment(item.date).format("MMMM DD, h:mm a")}
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      ) : item.message ? (
-                        <div key={i}>
-                          <div className="message-left">
-                            <div className="message-left-text">
-                              <p>{item.message}</p>
                             </div>
                             <div className="message-left-time">
                               <p>
@@ -297,31 +357,20 @@ const ChatBox = () => {
                               </p>
                             </div>
                           </div>
-                        </div>
-                      ) : item.image ? (
-                        <div className="message-left">
-                          <div className="message-left-text">
-                            <ModalImage
-                              small={item.image}
-                              large={item.image}
-                              alt={item.whosendname}
-                            />
+                        ) : (
+                          <div className="message-left">
+                            <div className="message-left-text">
+                              <audio src={item.audio} controls></audio>
+                            </div>
+                            <div className="message-left-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
                           </div>
-                          <div className="message-left-time">
-                            <p>{moment(item.date).format("MMMM DD, h:mm a")}</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="message-left">
-                          <div className="message-left-text">
-                            <audio src={item.audio} controls></audio>
-                          </div>
-                          <div className="message-left-time">
-                            <p>{moment(item.date).format("MMMM DD, h:mm a")}</p>
-                          </div>
-                        </div>
-                      )
-                    )
+                        )}
+                      </div>
+                    ))
                   : "chat for group"}
                 {/* <div className="message-left">
                   <div className="message-left-text">
@@ -442,11 +491,24 @@ const ChatBox = () => {
               <div className="chat-input">
                 <input
                   type="text"
-                  onChange={(e) => setMessage(e.target.value.trimStart())}
+                  onChange={handleMessageInput}
                   value={message}
                   onKeyUp={handleEnterPress}
                   placeholder="Write message..."
                 />
+
+                <div
+                  className="emoji-chat"
+                  onClick={() => setShowEmoji(!showEmoji)}
+                >
+                  <BsEmojiSmile />
+                  {showEmoji && (
+                    <div className="emoji-picker">
+                      <EmojiPicker onEmojiClick={handleEmojiClick} />
+                    </div>
+                  )}
+                </div>
+
                 <div
                   className="audio-recorded"
                   onClick={() => setShowAudio(true)}
@@ -507,7 +569,9 @@ const ChatBox = () => {
                             </div>
                           </div>
                           <div className="add-gallery">
-                            <BiMicrophone />
+                            <div className="open-audio-canvas">
+                              <BiMicrophone />
+                            </div>
                           </div>
                         </div>
                       )}
