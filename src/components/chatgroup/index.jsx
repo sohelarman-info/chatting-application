@@ -41,7 +41,6 @@ const ChatGroup = () => {
 
   // group chat functionality
   const handleActiveGroup = (item) => {
-    console.log(item);
     dispatch(
       activeChat({
         status: "group",

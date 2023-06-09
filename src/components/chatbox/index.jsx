@@ -65,6 +65,8 @@ const ChatBox = () => {
   // msg state
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const [GroupMessageList, setGroupMessageList] = useState([]);
+  const [GroupMembers, setGroupMembers] = useState([]);
   const scrollMsg = useRef(null);
 
   // Emoji Picker Functionality
@@ -142,7 +144,7 @@ const ChatBox = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          set(push(ref(db, "chat/")), {
+          set(push(ref(db, "friends-chat/")), {
             whosendid: user.uid,
             whosendname: user.displayName,
             whosendphoto: user.photoURL,
@@ -172,16 +174,32 @@ const ChatBox = () => {
   };
 
   const handleSendMessage = (e) => {
-    set(push(ref(db, "chat/")), {
-      whosendid: user.uid,
-      whosendname: user.displayName,
-      whosendphoto: user.photoURL,
-      whoreceiveid: activeChatName.id,
-      whoreceivename: activeChatName.name,
-      whoreceivephoto: activeChatName.photo,
-      message: message,
-      date: `${new Date()}`,
-    }).then(() => setMessage(""));
+    if (activeChatName.status == "single") {
+      // set(push(ref(db, "friends-chat/")), {
+      //   whosendid: user.uid,
+      //   whosendname: user.displayName,
+      //   whosendphoto: user.photoURL,
+      //   whoreceiveid: activeChatName.id,
+      //   whoreceivename: activeChatName.name,
+      //   whoreceivephoto: activeChatName.photo,
+      //   message: message,
+      //   date: `${new Date()}`,
+      // }).then(() => setMessage(""));
+      console.log("user single msg");
+    } else if (activeChatName.status == "group") {
+      set(push(ref(db, "group-chat/")), {
+        whosendid: user.uid,
+        whosendname: user.displayName,
+        whosendphoto: user.photoURL,
+        whoreceiveid: activeChatName.groupid,
+        adminid: activeChatName.adminid,
+        whoreceivename: activeChatName.name,
+        message: message,
+        date: `${new Date()}`,
+      }).then(() => setMessage(""));
+      console.log("group msg");
+      console.log(activeChatName);
+    }
   };
 
   // send to enter button
@@ -212,7 +230,7 @@ const ChatBox = () => {
     );
     uploadBytes(audioStorageRef, blob).then((snapshot) => {
       getDownloadURL(audioStorageRef).then((downloadURL) => {
-        set(push(ref(db, "chat/")), {
+        set(push(ref(db, "friends-chat/")), {
           whosendid: user.uid,
           whosendname: user.displayName,
           whosendphoto: user.photoURL,
@@ -232,10 +250,10 @@ const ChatBox = () => {
     });
   };
 
-  // read message
+  // read single message
 
   useEffect(() => {
-    onValue(ref(db, "chat"), (snapshot) => {
+    onValue(ref(db, "friends-chat/"), (snapshot) => {
       let singleMessage = [];
       snapshot.forEach((item) => {
         if (
@@ -251,10 +269,39 @@ const ChatBox = () => {
     });
   }, [activeChatName?.id]);
 
-  // scroll functionality
+  // read group message
+
+  useEffect(() => {
+    onValue(ref(db, "group-chat/"), (snapshot) => {
+      let groupMessage = [];
+      snapshot.forEach((item) => {
+        groupMessage.push(item.val());
+      });
+      setGroupMessageList(groupMessage);
+    });
+  }, [activeChatName?.id]);
+
+  // read group members
+
+  useEffect(() => {
+    onValue(ref(db, "groupmembers/"), (snapshot) => {
+      let groupMembersArray = [];
+      snapshot.forEach((item) => {
+        groupMembersArray.push(item.val().groupid + item.val().userid);
+      });
+      setGroupMembers(groupMembersArray);
+    });
+  }, [activeChatName?.id]);
+
+  // single memssage scroll functionality
   useEffect(() => {
     scrollMsg?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messageList]);
+
+  // group memssage scroll functionality
+  useEffect(() => {
+    scrollMsg?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [GroupMessageList]);
 
   return (
     <>
@@ -270,7 +317,14 @@ const ChatBox = () => {
             <div className="chat-user">
               <div className="user-profile-pic">
                 <picture>
-                  <img src={activeChatName.photo} alt={activeChatName.name} />
+                  <img
+                    src={
+                      !activeChatName.photo
+                        ? "./images/profile/no-photo.jpg"
+                        : activeChatName.photo
+                    }
+                    alt={activeChatName.name}
+                  />
                 </picture>
               </div>
               <div className="user-name">
@@ -283,33 +337,15 @@ const ChatBox = () => {
             </div>
             <div className="message-box">
               <div className="chat-scroll">
-                {activeChatName.status == "single"
-                  ? messageList.map((item, i) => (
-                      <div ref={scrollMsg}>
-                        {item.whosendid == user.uid ? (
-                          item.message ? (
-                            <div key={i}>
-                              <div className="message-right">
-                                <div className="message-right-text">
-                                  <p>{item.message}</p>
-                                </div>
-                                <div className="message-right-time">
-                                  <p>
-                                    {moment(item.date).format(
-                                      "MMMM DD, h:mm a"
-                                    )}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          ) : item.image ? (
+                {activeChatName.status == "single" ? (
+                  messageList.map((item, i) => (
+                    <div ref={scrollMsg}>
+                      {item.whosendid == user.uid ? (
+                        item.message ? (
+                          <div key={i}>
                             <div className="message-right">
                               <div className="message-right-text">
-                                <ModalImage
-                                  small={item.image}
-                                  large={item.image}
-                                  alt={item.whosendname}
-                                />
+                                <p>{item.message}</p>
                               </div>
                               <div className="message-right-time">
                                 <p>
@@ -317,10 +353,82 @@ const ChatBox = () => {
                                 </p>
                               </div>
                             </div>
-                          ) : (
+                          </div>
+                        ) : item.image ? (
+                          <div className="message-right">
+                            <div className="message-right-text">
+                              <ModalImage
+                                small={item.image}
+                                large={item.image}
+                                alt={item.whosendname}
+                              />
+                            </div>
+                            <div className="message-right-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="message-right">
+                            <div className="message-right-text">
+                              <audio src={item.audio} controls></audio>
+                            </div>
+                            <div className="message-right-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      ) : item.message ? (
+                        <div key={i}>
+                          <div className="message-left">
+                            <div className="message-left-text">
+                              <p>{item.message}</p>
+                            </div>
+                            <div className="message-left-time">
+                              <p>
+                                {moment(item.date).format("MMMM DD, h:mm a")}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : item.image ? (
+                        <div className="message-left">
+                          <div className="message-left-text">
+                            <ModalImage
+                              small={item.image}
+                              large={item.image}
+                              alt={item.whosendname}
+                            />
+                          </div>
+                          <div className="message-left-time">
+                            <p>{moment(item.date).format("MMMM DD, h:mm a")}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="message-left">
+                          <div className="message-left-text">
+                            <audio src={item.audio} controls></audio>
+                          </div>
+                          <div className="message-left-time">
+                            <p>{moment(item.date).format("MMMM DD, h:mm a")}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : user.uid == activeChatName.adminid ||
+                  GroupMembers.includes(activeChatName.groupid + user.uid) ? (
+                  GroupMessageList.map((item, i) => (
+                    <div ref={scrollMsg}>
+                      {item.whoreceiveid == activeChatName.groupid &&
+                        (item.whosendid == user.uid ? (
+                          <div key={i}>
                             <div className="message-right">
                               <div className="message-right-text">
-                                <audio src={item.audio} controls></audio>
+                                <p>{item.message}</p>
                               </div>
                               <div className="message-right-time">
                                 <p>
@@ -328,10 +436,13 @@ const ChatBox = () => {
                                 </p>
                               </div>
                             </div>
-                          )
-                        ) : item.message ? (
+                          </div>
+                        ) : (
                           <div key={i}>
                             <div className="message-left">
+                              <div className="sender-name">
+                                <p>{item.whosendname}</p>
+                              </div>
                               <div className="message-left-text">
                                 <p>{item.message}</p>
                               </div>
@@ -342,36 +453,14 @@ const ChatBox = () => {
                               </div>
                             </div>
                           </div>
-                        ) : item.image ? (
-                          <div className="message-left">
-                            <div className="message-left-text">
-                              <ModalImage
-                                small={item.image}
-                                large={item.image}
-                                alt={item.whosendname}
-                              />
-                            </div>
-                            <div className="message-left-time">
-                              <p>
-                                {moment(item.date).format("MMMM DD, h:mm a")}
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="message-left">
-                            <div className="message-left-text">
-                              <audio src={item.audio} controls></audio>
-                            </div>
-                            <div className="message-left-time">
-                              <p>
-                                {moment(item.date).format("MMMM DD, h:mm a")}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  : "chat for group"}
+                        ))}
+                    </div>
+                  ))
+                ) : (
+                  <div className="coversation-empty-message">
+                    You are not group admin or member
+                  </div>
+                )}
                 {/* <div className="message-left">
                   <div className="message-left-text">
                     <p>Hey There !</p>
