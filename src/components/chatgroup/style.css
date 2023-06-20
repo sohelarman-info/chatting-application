@@ -1,0 +1,94 @@
+.chat-list-wrapper {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.chat-group-wrapper-scroll {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+  overflow: auto;
+  padding-right: 10px;
+}
+
+.chat-group-wrapper-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-group-wrapper-scroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(211, 210, 210);
+  border-radius: 10px;
+}
+
+.chat-group-wrapper-scroll::-webkit-scrollbar-thumb {
+  background: #5f35f5;
+  border-radius: 10px;
+}
+
+.chat-group-wrapper-scroll::-webkit-scrollbar-thumb:hover {
+  background: #33169c;
+}
+
+.chat-group-list-header {
+  padding: 1px 20px;
+  position: relative;
+}
+
+.chat-group-list-header h4 {
+  font-size: 20px;
+  font-weight: var(--bold);
+  color: var(--black);
+  text-transform: capitalize;
+}
+
+.chat-group-item-wraper {
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  transition: all linear 0.2s;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.chat-group-item-wraper:hover {
+  background-color: rgba(51, 22, 156, 0.15);
+}
+
+.chat-group-item-wraper:last-child {
+  border-bottom: none;
+}
+
+.chat-group-item-pic {
+  width: 50px;
+  height: 50px;
+}
+
+.chat-group-item-pic img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-group-item-name {
+  width: 50%;
+  margin-left: 20px;
+}
+
+.chat-group-item-name h5 {
+  font-size: 16px;
+  text-transform: capitalize;
+  font-weight: var(--bold);
+  color: var(--black);
+}
+
+.chat-group-item-name p {
+  font-size: 14px !important;
+  color: rgba(77, 77, 77, 0.75);
+  font-size: 14px;
+  font-weight: var(--regular);
+}

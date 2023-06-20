@@ -1,0 +1,119 @@
+.friends-list-wrapper {
+  margin-top: 0;
+  width: 98%;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.friends-list-wrapper-scroll {
+  width: 100%;
+  height: 380px;
+  margin-top: 20px;
+  overflow: auto;
+  padding-right: 10px;
+}
+
+.friends-list-wrapper-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.friends-list-wrapper-scroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(211, 210, 210);
+  border-radius: 10px;
+}
+
+.friends-list-wrapper-scroll::-webkit-scrollbar-thumb {
+  background: #5f35f5;
+  border-radius: 10px;
+}
+
+.friends-list-wrapper-scroll::-webkit-scrollbar-thumb:hover {
+  background: #33169c;
+}
+
+.friends-list-header {
+  padding: 1px 0;
+  position: relative;
+}
+.friends-list-header h4 {
+  font-size: 20px;
+  text-transform: capitalize;
+  font-weight: var(--bold);
+  color: var(--black);
+}
+
+.friends-list-option {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 6px;
+}
+
+.friends-list-option svg {
+  fill: var(--theme-color);
+  cursor: pointer;
+}
+
+.friends-item-wraper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.friends-item-wraper:last-child {
+  border-bottom: none;
+}
+
+.friends-item-pic {
+  width: 70px;
+  height: 70px;
+}
+
+.friends-item-pic img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.friends-item-name {
+  width: 50%;
+  margin-left: 20px;
+}
+
+.friends-item-name h5 {
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: var(--bold);
+  color: var(--black);
+}
+
+.friends-item-name p {
+  font-size: 18px;
+  color: rgba(77, 77, 77, 0.75);
+  font-size: 14px;
+  font-weight: var(--regular);
+}
+
+.friends-item-button {
+  padding: 10px;
+}
+
+.friends-block-button button {
+  width: 100%;
+  background-color: #e91e63;
+  color: var(--theme-text-color);
+  font-weight: var(--bold);
+  font-size: 14px;
+}
+
+.friends-block-button button:hover {
+  background-color: #e91e63;
+  color: var(--theme-text-color);
+}

@@ -1,0 +1,138 @@
+.users-list-wrapper {
+  margin-top: 15px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.user-search {
+  margin-top: 15px !important;
+}
+
+.users-wrapper-scroll {
+  width: 100%;
+  height: 410px;
+  margin-top: 20px;
+  overflow: auto;
+  padding-right: 10px;
+}
+
+.users-wrapper-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.users-wrapper-scroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(211, 210, 210);
+  border-radius: 10px;
+}
+
+.users-wrapper-scroll::-webkit-scrollbar-thumb {
+  background: #5f35f5;
+  border-radius: 10px;
+}
+
+.users-wrapper-scroll::-webkit-scrollbar-thumb:hover {
+  background: #33169c;
+}
+
+.users-list-header {
+  padding: 1px 0;
+  position: relative;
+}
+.users-list-header h4 {
+  font-size: 20px;
+  text-transform: capitalize;
+  font-weight: var(--bold);
+  color: var(--black);
+}
+
+.users-list-option {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 6px;
+}
+
+.users-list-option svg {
+  fill: var(--theme-color);
+  cursor: pointer;
+}
+
+.users-item-wraper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.users-item-wraper:last-child {
+  border-bottom: none;
+}
+
+.users-item-pic {
+  width: 70px;
+  height: 70px;
+}
+
+.users-item-pic img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.users-item-name {
+  width: 50%;
+  margin-left: 20px;
+}
+
+.users-item-name h5 {
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: var(--bold);
+  color: var(--black);
+}
+
+.users-item-name p {
+  font-size: 18px;
+  color: rgba(77, 77, 77, 0.75);
+  font-size: 14px;
+  font-weight: var(--regular);
+}
+
+.users-item-button {
+  padding: 10px;
+}
+
+.users-block-button button {
+  min-width: 30px;
+  background-color: var(--theme-color);
+  color: var(--white);
+  font-weight: var(--bold);
+  font-size: 14px;
+  padding: 10px;
+  padding-right: 10px !important;
+}
+
+.users-block-button button svg {
+  fill: #fff;
+  stroke: #fff;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.users-block-button button:hover {
+  background-color: var(--theme-color);
+  color: var(--theme-text-color);
+}
+
+.block-button {
+  background-color: red !important;
+}
