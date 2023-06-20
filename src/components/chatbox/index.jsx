@@ -67,6 +67,7 @@ const ChatBox = () => {
   const [messageList, setMessageList] = useState([]);
   const [GroupMessageList, setGroupMessageList] = useState([]);
   const [GroupMembers, setGroupMembers] = useState([]);
+  const [OnlineStatus, setOnlineStatus] = useState([]);
   const scrollMsg = useRef(null);
 
   // Emoji Picker Functionality
@@ -88,7 +89,7 @@ const ChatBox = () => {
     );
     uploadString(storageRef, dataUri, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((downloadURL) => {
-        set(push(ref(db, "chat/")), {
+        set(push(ref(db, "friends-chat/")), {
           whosendid: user.uid,
           whosendname: user.displayName,
           whosendphoto: user.photoURL,
@@ -175,17 +176,16 @@ const ChatBox = () => {
 
   const handleSendMessage = (e) => {
     if (activeChatName.status == "single") {
-      // set(push(ref(db, "friends-chat/")), {
-      //   whosendid: user.uid,
-      //   whosendname: user.displayName,
-      //   whosendphoto: user.photoURL,
-      //   whoreceiveid: activeChatName.id,
-      //   whoreceivename: activeChatName.name,
-      //   whoreceivephoto: activeChatName.photo,
-      //   message: message,
-      //   date: `${new Date()}`,
-      // }).then(() => setMessage(""));
-      console.log("user single msg");
+      set(push(ref(db, "friends-chat/")), {
+        whosendid: user.uid,
+        whosendname: user.displayName,
+        whosendphoto: user.photoURL,
+        whoreceiveid: activeChatName.id,
+        whoreceivename: activeChatName.name,
+        whoreceivephoto: activeChatName.photo,
+        message: message,
+        date: `${new Date()}`,
+      }).then(() => setMessage(""));
     } else if (activeChatName.status == "group") {
       set(push(ref(db, "group-chat/")), {
         whosendid: user.uid,
@@ -293,6 +293,18 @@ const ChatBox = () => {
     });
   }, [activeChatName?.id]);
 
+  // read Online status
+
+  useEffect(() => {
+    onValue(ref(db, "online/"), (snapshot) => {
+      let OnlineArray = [];
+      snapshot.forEach((item) => {
+        OnlineArray.push(item.val().userid);
+      });
+      setOnlineStatus(OnlineArray);
+    });
+  }, [activeChatName?.id]);
+
   // single memssage scroll functionality
   useEffect(() => {
     scrollMsg?.current?.scrollIntoView({ behavior: "smooth" });
@@ -326,10 +338,19 @@ const ChatBox = () => {
                     alt={activeChatName.name}
                   />
                 </picture>
+                {OnlineStatus.includes(activeChatName.id) ? (
+                  <div className="online-active"></div>
+                ) : (
+                  <div className="offline-active"></div>
+                )}
               </div>
               <div className="user-name">
                 <h4>{activeChatName.name}</h4>
-                <p className="status">online</p>
+                <p className="status">
+                  {OnlineStatus.includes(activeChatName.id)
+                    ? "Online"
+                    : "offline"}
+                </p>
               </div>
               <div className="chat-list-option">
                 <SlOptionsVertical />

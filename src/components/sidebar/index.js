@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SidebarIcons from "./sidebaricons";
 
 import { ImExit } from "react-icons/im";
@@ -15,6 +15,7 @@ import {
 import ProfileModal from "../modal/profilemodal";
 import { BsChatDots } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
+import { getDatabase, onValue, ref, remove } from "firebase/database";
 
 const Sidebar = () => {
   const auth = getAuth();
@@ -22,20 +23,47 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  const [OnlineStatus, setOnlineStatus] = useState([]);
   const handleOpen = () => {
     setOpen(true);
   };
   const handlelogout = () => {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem("users");
-        dispatch(Loginuser(null));
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    if (OnlineStatus.includes(users.uid)) {
+      signOut(auth)
+        .then(() => {
+          localStorage.removeItem("users");
+          dispatch(Loginuser(null));
+          navigate("/");
+          remove(ref(db, "online/" + users.uid));
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    } else {
+      signOut(auth)
+        .then(() => {
+          localStorage.removeItem("users");
+          dispatch(Loginuser(null));
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
   };
+
+  // read Online status
+
+  const db = getDatabase();
+  useEffect(() => {
+    onValue(ref(db, "online/"), (snapshot) => {
+      let OnlineArray = [];
+      snapshot.forEach((item) => {
+        OnlineArray.push(item.val().userid);
+      });
+      setOnlineStatus(OnlineArray);
+    });
+  }, []);
 
   return (
     <div className="sidebar-wrapper">

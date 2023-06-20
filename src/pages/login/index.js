@@ -62,6 +62,10 @@ const Login = () => {
               theme: "light",
             });
             navigate("/");
+            set(ref(db, "online/" + user.uid), {
+              userid: user.uid,
+              username: user.displayName,
+            });
             dispatch(Loginuser(user));
             localStorage.setItem("users", JSON.stringify(user));
           } else {
