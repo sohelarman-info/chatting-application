@@ -1,0 +1,32 @@
+.settings-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.settings-area {
+  width: 500px;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.profile-pic-area img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+}

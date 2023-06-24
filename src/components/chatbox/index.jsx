@@ -64,6 +64,7 @@ const ChatBox = () => {
 
   // msg state
   const [message, setMessage] = useState("");
+  const [groupMessage, setGroupMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const [GroupMessageList, setGroupMessageList] = useState([]);
   const [GroupMembers, setGroupMembers] = useState([]);
@@ -100,6 +101,7 @@ const ChatBox = () => {
           date: `${new Date()}`,
         }).then(() => {
           setMessage("");
+
           setOpen(false);
         });
       });
@@ -156,6 +158,7 @@ const ChatBox = () => {
             date: `${new Date()}`,
           }).then(() => {
             setMessage("");
+
             setOpen(false);
           });
         });
@@ -171,6 +174,7 @@ const ChatBox = () => {
 
   const handleMessageInput = (e) => {
     setMessage(e.target.value.trimStart());
+    setGroupMessage(e.target.value.trimStart());
     setShowEmoji(false);
   };
 
@@ -185,7 +189,9 @@ const ChatBox = () => {
         whoreceivephoto: activeChatName.photo,
         message: message,
         date: `${new Date()}`,
-      }).then(() => setMessage(""));
+      }).then(() => {
+        setMessage("");
+      });
     } else if (activeChatName.status == "group") {
       set(push(ref(db, "group-chat/")), {
         whosendid: user.uid,
@@ -196,7 +202,9 @@ const ChatBox = () => {
         whoreceivename: activeChatName.name,
         message: message,
         date: `${new Date()}`,
-      }).then(() => setMessage(""));
+      }).then(() => {
+        setMessage("");
+      });
       console.log("group msg");
       console.log(activeChatName);
     }
@@ -597,193 +605,386 @@ const ChatBox = () => {
                 </div> */}
               </div>
             </div>
-            <div className="chat-input-area">
-              <div className="chat-input">
-                <input
-                  type="text"
-                  onChange={handleMessageInput}
-                  value={message}
-                  onKeyUp={handleEnterPress}
-                  placeholder="Write message..."
-                />
+            {activeChatName.status == "single" ? (
+              <div className="chat-input-area">
+                <div className="chat-input">
+                  <input
+                    type="text"
+                    onChange={handleMessageInput}
+                    value={message}
+                    onKeyUp={handleEnterPress}
+                    placeholder="Write message..."
+                  />
 
-                <div
-                  className="emoji-chat"
-                  onClick={() => setShowEmoji(!showEmoji)}
-                >
-                  <BsEmojiSmile />
-                  {showEmoji && (
-                    <div className="emoji-picker">
-                      <EmojiPicker onEmojiClick={handleEmojiClick} />
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  className="audio-recorded"
-                  onClick={() => setShowAudio(true)}
-                >
-                  {!audioURL ? (
-                    <AudioRecorder
-                      onRecordingComplete={addAudioElement}
-                      audioTrackConstraints={{
-                        noiseSuppression: true,
-                        echoCancellation: true,
-                      }}
-                      downloadOnSavePress={false}
-                      downloadFileExtension="mp3"
-                    />
-                  ) : (
-                    <audio src={audioURL} controls></audio>
-                  )}
-                </div>
-                <div className="chat-files">
-                  {!audioURL ? (
-                    <div className="add-files">
-                      {open == true ? (
-                        <div
-                          className="add-files"
-                          onClick={() => setOpen(false)}
-                        >
-                          <RxCross1 />
-                        </div>
-                      ) : (
-                        <div
-                          className="add-files"
-                          onClick={() => setOpen(true)}
-                        >
-                          <AiOutlinePlus />
-                        </div>
-                      )}
-                      {open && (
-                        <div className="add-files-area">
-                          <div className="add-gallery">
-                            <div
-                              className="camera-capture"
-                              onClick={() => setOpenCamera(!openCamera)}
-                            >
-                              {/* packege sourch: https://www.npmjs.com/package/react-html5-camera-photo */}
-                              <FiCamera />
-                            </div>
-                          </div>
-                          <div className="add-gallery">
-                            <div className="upload-image">
-                              <label>
-                                <input
-                                  hidden
-                                  onChange={handleImageUpload}
-                                  type="file"
-                                />
-                                <MdOutlinePhotoSizeSelectActual />
-                              </label>
-                            </div>
-                          </div>
-                          <div className="add-gallery">
-                            <div className="open-audio-canvas">
-                              <BiMicrophone />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="audio-send-area">
-                      <div
-                        className="audio-delete-btn"
-                        onClick={() => {
-                          setAudioURL("");
-                          setShowAudio(false);
-                        }}
-                      >
-                        <AiOutlineDelete />
+                  <div
+                    className="emoji-chat"
+                    onClick={() => setShowEmoji(!showEmoji)}
+                  >
+                    <BsEmojiSmile />
+                    {showEmoji && (
+                      <div className="emoji-picker">
+                        <EmojiPicker onEmojiClick={handleEmojiClick} />
                       </div>
+                    )}
+                  </div>
 
-                      {loader ? (
-                        <ScaleLoader
-                          className="audio-loading-btn"
-                          height="10"
-                          width="3"
-                          color="#5F35F5"
-                        />
-                      ) : (
+                  <div
+                    className="audio-recorded"
+                    onClick={() => setShowAudio(true)}
+                  >
+                    {!audioURL ? (
+                      <AudioRecorder
+                        onRecordingComplete={addAudioElement}
+                        audioTrackConstraints={{
+                          noiseSuppression: true,
+                          echoCancellation: true,
+                        }}
+                        downloadOnSavePress={false}
+                        downloadFileExtension="mp3"
+                      />
+                    ) : (
+                      <audio src={audioURL} controls></audio>
+                    )}
+                  </div>
+                  <div className="chat-files">
+                    {!audioURL ? (
+                      <div className="add-files">
+                        {open == true ? (
+                          <div
+                            className="add-files"
+                            onClick={() => setOpen(false)}
+                          >
+                            <RxCross1 />
+                          </div>
+                        ) : (
+                          <div
+                            className="add-files"
+                            onClick={() => setOpen(true)}
+                          >
+                            <AiOutlinePlus />
+                          </div>
+                        )}
+                        {open && (
+                          <div className="add-files-area">
+                            <div className="add-gallery">
+                              <div
+                                className="camera-capture"
+                                onClick={() => setOpenCamera(!openCamera)}
+                              >
+                                {/* packege sourch: https://www.npmjs.com/package/react-html5-camera-photo */}
+                                <FiCamera />
+                              </div>
+                            </div>
+                            <div className="add-gallery">
+                              <div className="upload-image">
+                                <label>
+                                  <input
+                                    hidden
+                                    onChange={handleImageUpload}
+                                    type="file"
+                                  />
+                                  <MdOutlinePhotoSizeSelectActual />
+                                </label>
+                              </div>
+                            </div>
+                            <div className="add-gallery">
+                              <div className="open-audio-canvas">
+                                <BiMicrophone />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="audio-send-area">
                         <div
-                          className="audio-send-btn"
-                          onClick={handleAudioUpload}
+                          className="audio-delete-btn"
+                          onClick={() => {
+                            setAudioURL("");
+                            setShowAudio(false);
+                          }}
                         >
-                          <FaTelegramPlane />
+                          <AiOutlineDelete />
                         </div>
-                      )}
-                    </div>
-                  )}
+
+                        {loader ? (
+                          <ScaleLoader
+                            className="audio-loading-btn"
+                            height="10"
+                            width="3"
+                            color="#5F35F5"
+                          />
+                        ) : (
+                          <div
+                            className="audio-send-btn"
+                            onClick={handleAudioUpload}
+                          >
+                            <FaTelegramPlane />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="chat-send-button">
-                {message == "" ? (
-                  showAudio == true ? (
-                    !audioURL ? (
-                      !showAudio ? (
+                <div className="chat-send-button">
+                  {message == "" ? (
+                    showAudio == true ? (
+                      !audioURL ? (
+                        !showAudio ? (
+                          <Button
+                            disabled
+                            variant="contained"
+                            size="medium"
+                            className="send-button recording-button"
+                          >
+                            <RiRecordCircleLine />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            size="medium"
+                            className="send-button"
+                            onClick={() => {
+                              setShowAudio(false);
+                              setAudioURL("");
+                            }}
+                          >
+                            <MdVoiceOverOff />
+                          </Button>
+                        )
+                      ) : loader ? (
                         <Button
                           disabled
                           variant="contained"
                           size="medium"
-                          className="send-button recording-button"
+                          className="send-button"
                         >
-                          <RiRecordCircleLine />
+                          <MdScheduleSend />
                         </Button>
                       ) : (
                         <Button
                           variant="contained"
                           size="medium"
                           className="send-button"
-                          onClick={() => {
-                            setShowAudio(false);
-                            setAudioURL("");
-                          }}
+                          onClick={handleAudioUpload}
                         >
-                          <MdVoiceOverOff />
+                          <MdScheduleSend />
                         </Button>
                       )
-                    ) : loader ? (
+                    ) : (
                       <Button
                         disabled
                         variant="contained"
                         size="medium"
                         className="send-button"
                       >
-                        <MdScheduleSend />
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        size="medium"
-                        className="send-button"
-                        onClick={handleAudioUpload}
-                      >
-                        <MdScheduleSend />
+                        <FaTelegramPlane />
                       </Button>
                     )
                   ) : (
                     <Button
-                      disabled
+                      onClick={handleSendMessage}
                       variant="contained"
                       size="medium"
                       className="send-button"
                     >
                       <FaTelegramPlane />
                     </Button>
-                  )
-                ) : (
-                  <Button
-                    onClick={handleSendMessage}
-                    variant="contained"
-                    size="medium"
-                    className="send-button"
-                  >
-                    <FaTelegramPlane />
-                  </Button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            ) : user.uid == activeChatName.adminid ||
+              GroupMembers.includes(activeChatName.groupid + user.uid) ? (
+              <div className="chat-input-area">
+                <div className="chat-input">
+                  <input
+                    type="text"
+                    onChange={handleMessageInput}
+                    value={message}
+                    onKeyUp={handleEnterPress}
+                    placeholder="Write message..."
+                  />
+
+                  <div
+                    className="emoji-chat"
+                    onClick={() => setShowEmoji(!showEmoji)}
+                  >
+                    <BsEmojiSmile />
+                    {showEmoji && (
+                      <div className="emoji-picker">
+                        <EmojiPicker onEmojiClick={handleEmojiClick} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div
+                    className="audio-recorded"
+                    onClick={() => setShowAudio(true)}
+                  >
+                    {!audioURL ? (
+                      <AudioRecorder
+                        onRecordingComplete={addAudioElement}
+                        audioTrackConstraints={{
+                          noiseSuppression: true,
+                          echoCancellation: true,
+                        }}
+                        downloadOnSavePress={false}
+                        downloadFileExtension="mp3"
+                      />
+                    ) : (
+                      <audio src={audioURL} controls></audio>
+                    )}
+                  </div>
+                  <div className="chat-files">
+                    {!audioURL ? (
+                      <div className="add-files">
+                        {open == true ? (
+                          <div
+                            className="add-files"
+                            onClick={() => setOpen(false)}
+                          >
+                            <RxCross1 />
+                          </div>
+                        ) : (
+                          <div
+                            className="add-files"
+                            onClick={() => setOpen(true)}
+                          >
+                            <AiOutlinePlus />
+                          </div>
+                        )}
+                        {open && (
+                          <div className="add-files-area">
+                            <div className="add-gallery">
+                              <div
+                                className="camera-capture"
+                                onClick={() => setOpenCamera(!openCamera)}
+                              >
+                                {/* packege sourch: https://www.npmjs.com/package/react-html5-camera-photo */}
+                                <FiCamera />
+                              </div>
+                            </div>
+                            <div className="add-gallery">
+                              <div className="upload-image">
+                                <label>
+                                  <input
+                                    hidden
+                                    onChange={handleImageUpload}
+                                    type="file"
+                                  />
+                                  <MdOutlinePhotoSizeSelectActual />
+                                </label>
+                              </div>
+                            </div>
+                            <div className="add-gallery">
+                              <div className="open-audio-canvas">
+                                <BiMicrophone />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="audio-send-area">
+                        <div
+                          className="audio-delete-btn"
+                          onClick={() => {
+                            setAudioURL("");
+                            setShowAudio(false);
+                          }}
+                        >
+                          <AiOutlineDelete />
+                        </div>
+
+                        {loader ? (
+                          <ScaleLoader
+                            className="audio-loading-btn"
+                            height="10"
+                            width="3"
+                            color="#5F35F5"
+                          />
+                        ) : (
+                          <div
+                            className="audio-send-btn"
+                            onClick={handleAudioUpload}
+                          >
+                            <FaTelegramPlane />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="chat-send-button">
+                  {message == "" ? (
+                    showAudio == true ? (
+                      !audioURL ? (
+                        !showAudio ? (
+                          <Button
+                            disabled
+                            variant="contained"
+                            size="medium"
+                            className="send-button recording-button"
+                          >
+                            <RiRecordCircleLine />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            size="medium"
+                            className="send-button"
+                            onClick={() => {
+                              setShowAudio(false);
+                              setAudioURL("");
+                            }}
+                          >
+                            <MdVoiceOverOff />
+                          </Button>
+                        )
+                      ) : loader ? (
+                        <Button
+                          disabled
+                          variant="contained"
+                          size="medium"
+                          className="send-button"
+                        >
+                          <MdScheduleSend />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          size="medium"
+                          className="send-button"
+                          onClick={handleAudioUpload}
+                        >
+                          <MdScheduleSend />
+                        </Button>
+                      )
+                    ) : (
+                      <Button
+                        disabled
+                        variant="contained"
+                        size="medium"
+                        className="send-button"
+                      >
+                        <FaTelegramPlane />
+                      </Button>
+                    )
+                  ) : (
+                    <Button
+                      onClick={handleSendMessage}
+                      variant="contained"
+                      size="medium"
+                      className="send-button"
+                    >
+                      <FaTelegramPlane />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              "Not Permitted"
+            )}
           </div>
         )}
         {openCamera && (

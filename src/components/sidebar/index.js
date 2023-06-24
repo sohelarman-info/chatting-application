@@ -100,9 +100,9 @@ const Sidebar = () => {
             <div className="page-icon">
               <FaRegBell />
             </div>
-            <div className="page-icon">
+            <NavLink to="/settings" className="page-icon">
               <AiOutlineSetting />
-            </div>
+            </NavLink>
           </div>
           <div className="logout-section">
             <div className="logout-icon" onClick={handlelogout}>
