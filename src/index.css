@@ -57,6 +57,7 @@ ol {
   --link-color: #ea6c00;
   --border-color: rgba(17, 23, 93, 0.3);
   --error-color: #ff0000;
+  --border-color: #f1f1f1;
 
   /* font-weight */
   --thin: 100;
