@@ -30,3 +30,41 @@
   padding: 5px;
   border: 1px solid var(--border-color);
 }
+
+.settings-field-area {
+  margin-top: 30px;
+}
+
+.settings-field {
+  margin-top: 20px;
+  position: relative;
+}
+
+.settings-field input {
+  width: 100% !important;
+}
+
+.change-password-eye {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  cursor: pointer;
+  transition: all linear 0.3s;
+}
+
+.change-password-eye svg {
+  width: 25px;
+  height: 25px;
+}
+
+.change-password-eye path {
+  fill: #d3d3d3;
+  transition: all linear 0.5s;
+}
+
+.update-error-msg {
+  color: var(--error-color) !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  margin-top: 10px;
+}

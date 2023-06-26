@@ -30,3 +30,14 @@ export const signIn = Yup.object({
     .max(16, "Must be 16 characters or less")
     .required("Login password must be Required"),
 });
+
+export const ProfileUpdate = Yup.object({
+  name: Yup.string()
+    .min(3, "Must be 3 characters or up")
+    .max(32, "Must be 32 characters or less")
+    .required("Name must be Required"),
+
+  password: Yup.string()
+    .min(5, "Must be 5 characters or up")
+    .max(16, "Must be 16 characters or less"),
+});
