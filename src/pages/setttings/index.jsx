@@ -31,7 +31,7 @@ const Settings = () => {
       name: user.displayName,
       email: user.email,
     },
-    // validationSchema: ProfileUpdate,
+    validationSchema: ProfileUpdate,
     onSubmit: () => {
       setLoader(true);
       updateProfile(currentAuth, {
@@ -89,6 +89,9 @@ const Settings = () => {
                 value={formik.values.name}
                 fullWidth
               />
+              {formik.errors.name && formik.touched.name ? (
+                <p className="update-error-msg">{formik.errors.name}</p>
+              ) : null}
             </div>
             <div className="settings-field">
               <TextField
@@ -121,9 +124,9 @@ const Settings = () => {
                   <AiOutlineEyeInvisible />
                 )}
               </div>
-              {/* {formik.errors.password && formik.touched.password ? (
+              {formik.errors.password && formik.touched.password ? (
                 <p className="update-error-msg">{formik.errors.password}</p>
-              ) : null} */}
+              ) : null}
             </div>
             <div className="settings-field">
               {loader ? (
