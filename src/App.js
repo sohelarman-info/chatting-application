@@ -36,7 +36,7 @@ function App() {
     )
   );
   return (
-    <div>
+    <div className="dark-mode">
       <RouterProvider router={router}></RouterProvider>
     </div>
   );

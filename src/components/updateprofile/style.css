@@ -1,0 +1,70 @@
+.settings-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.settings-area {
+  width: 500px;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -1px 10px 17px -11px rgba(0, 0, 0, 0.3);
+}
+
+.profile-pic-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.profile-pic-area img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+}
+
+.settings-field-area {
+  margin-top: 30px;
+}
+
+.settings-field {
+  margin-top: 20px;
+  position: relative;
+}
+
+.settings-field input {
+  width: 100% !important;
+}
+
+.change-password-eye {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  cursor: pointer;
+  transition: all linear 0.3s;
+}
+
+.change-password-eye svg {
+  width: 25px;
+  height: 25px;
+}
+
+.change-password-eye path {
+  fill: #d3d3d3;
+  transition: all linear 0.5s;
+}
+
+.update-error-msg {
+  color: var(--error-color) !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  margin-top: 10px;
+}
