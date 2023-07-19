@@ -5,10 +5,52 @@
   outline: 0;
 }
 
+:root {
+  /* font-family */
+  --primary-font: "Poppins", sans-serif;
+  --secondary-font: "Open Sans", sans-serif;
+  --third-font: "Nunito", sans-serif;
+
+  /* color  */
+  --theme-color: #5f35f5;
+  --theme-text-color: #ffffff;
+  --white: #ffffff;
+  --black: #000000;
+  --heading-color: #11175d;
+  --text-color: #03014c;
+  --p-color: #64699d;
+  --link-color: #ea6c00;
+  --error-color: #ff0000;
+  --border-color: #f1f1f1;
+  --body-color: #f8fafb;
+
+  /* font-weight */
+  --thin: 100;
+  --extralight: 200;
+  --light: 300;
+  --regular: 400;
+  --medium: 500;
+  --semibold: 600;
+  --bold: 700;
+  --extrabold: 800;
+  --black: 900;
+}
+
+.dark-mode {
+  --theme-color: #232223;
+  --body-color: #1b191b;
+  --border-color: #424242;
+  --white: #393939;
+}
+
+body .dark-mode {
+  background-color: var(--body-color);
+}
+
 body {
   behavior: smoth;
   font-family: var(--primary-font);
-  background-color: #f8fafb;
+  background-color: var(--body-color);
   overflow: auto;
 }
 
@@ -38,35 +80,4 @@ a {
 ul,
 ol {
   list-style-type: none;
-}
-
-:root {
-  /* font-family */
-  --primary-font: "Poppins", sans-serif;
-  --secondary-font: "Open Sans", sans-serif;
-  --third-font: "Nunito", sans-serif;
-
-  /* color  */
-  --theme-color: #5f35f5;
-  --theme-text-color: #ffffff;
-  --white: #ffffff;
-  --black: #000000;
-  --heading-color: #11175d;
-  --text-color: #03014c;
-  --p-color: #64699d;
-  --link-color: #ea6c00;
-  --border-color: rgba(17, 23, 93, 0.3);
-  --error-color: #ff0000;
-  --border-color: #f1f1f1;
-
-  /* font-weight */
-  --thin: 100;
-  --extralight: 200;
-  --light: 300;
-  --regular: 400;
-  --medium: 500;
-  --semibold: 600;
-  --bold: 700;
-  --extrabold: 800;
-  --black: 900;
 }
